@@ -6,6 +6,7 @@ dotenv.config();
 import morgan from "morgan";
 import helmet from "helmet";
 import connectDB from "./db/db.js";
+import userrouter from "./routes/user.route.js";
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (_, res) => {
   res.json({ message: "server is working" });
 });
+
+app.use("/api/user", userrouter);
 
 connectDB()
   .then(() => {

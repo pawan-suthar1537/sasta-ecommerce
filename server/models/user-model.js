@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "please provide a password"],
-      minlength: 6,
+      minlength: 4,
     },
     avatar: {
       type: String,
@@ -26,8 +26,8 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       required: [true, "please provide a mobile number"],
       unique: true,
-      minlength: 10,
-      maxlength: 15,
+      minlength: [10, "mobile number must be at least 10 digits"],
+      maxlength: [10, "mobile number must be at most 10 digits"],
     },
     refresh_token: {
       type: String,
@@ -76,6 +76,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       enum: ["USER", "ADMIN"],
       default: "USER",
+    },
+    salt: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }
