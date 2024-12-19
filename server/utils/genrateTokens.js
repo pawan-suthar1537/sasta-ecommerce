@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import Usermodel from "../models/user-model.js";
 
-export const GenrateAccessToken = async (userId) => {
+export const GenrateAccessToken = async (userId, username) => {
   const token = await jwt.sign(
-    { id: userId },
+    { id: userId, username: username },
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: "12h",
@@ -12,9 +12,9 @@ export const GenrateAccessToken = async (userId) => {
   return token;
 };
 
-export const GenrateRefreshToken = async (userId) => {
+export const GenrateRefreshToken = async (userId, username) => {
   const token = await jwt.sign(
-    { id: userId },
+    { id: userId, username: username },
     process.env.REFRESH_ACCESS_TOKEN_SECRET,
     {
       expiresIn: "15d",

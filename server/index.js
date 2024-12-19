@@ -23,13 +23,13 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
   })
 );
-app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (_, res) => {
   res.json({ message: "server is working" });

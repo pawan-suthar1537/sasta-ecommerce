@@ -7,6 +7,7 @@ import {
   GenrateAccessToken,
   GenrateRefreshToken,
 } from "../utils/genrateTokens.js";
+import uploadImage from "../utils/imageuploadcloudinary.js";
 
 const hashPassword = (password, salt) => {
   const iterations = 10000;
@@ -111,13 +112,13 @@ export const Loginuser = async (req, res) => {
       });
     }
 
-    const accesstoken = await GenrateAccessToken(user._id);
-    const refreshtoken = await GenrateRefreshToken(user._id);
+    const accesstoken = await GenrateAccessToken(user._id, user.name);
+    const refreshtoken = await GenrateRefreshToken(user._id, user.name);
 
     const cookies_option = {
       httpOnly: true,
-      secure: true,
-      sameSite: "None",
+      secure: false,
+      sameSite: "Lax",
     };
 
     res.cookie("accessToken", accesstoken, cookies_option);
@@ -176,16 +177,65 @@ export const Verifyemail = async (req, res) => {
 
 export const Logout = async (req, res) => {
   try {
+    const userId = req.userId; // middleware
     const cookies_option = {
       httpOnly: true,
       secure: true,
-      sameSite: "None",
+      sameSite: "Lax",
     };
     res.clearCookie("accessToken", cookies_option);
     res.clearCookie("refreshToken", cookies_option);
+
+    const removeRefreshtoken = await Usermodel.findOneAndUpdate(
+      { _id: userId },
+      { refresh_token: "" }
+    );
     res
       .status(200)
       .json({ message: "User logged out successfully", success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
+
+export const UploadAvatar = async (req, res) => {
+  try {
+    const avatar = req.file;
+    const userId = req.userId;
+    const username = req.username;
+
+    if (!avatar) {
+      return res
+        .status(400)
+        .json({ message: "No avatar provided", success: false });
+    }
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ message: "No user id provided", success: false });
+    }
+
+    const upload = await uploadImage(avatar, username);
+    if (!upload) {
+      return res
+        .status(400)
+        .json({ message: "Failed to upload avatar", success: false });
+    }
+
+    const updateduser = await Usermodel.findOneAndUpdate(
+      { _id: userId },
+      { avatar: upload.url }
+    );
+
+    res.status(200).json({
+      message: "Avatar uploaded successfully",
+      data: {
+        _id: userId,
+        avatar: upload.url,
+      },
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message || error, success: false });
