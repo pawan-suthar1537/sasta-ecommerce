@@ -5,6 +5,7 @@ import {
   Registeruser,
   Verifyemail,
   UploadAvatar,
+  updateuserdetails,
 } from "../controller/user.controller.js";
 import { Auth } from "../middlewares/auth.js";
 import Upload from "../middlewares/multer.js";
@@ -14,6 +15,7 @@ userrouter.post("/register", Registeruser);
 userrouter.post("/verify-email", Verifyemail);
 userrouter.post("/login", Loginuser);
 userrouter.get("/logout", Auth, Logout);
+userrouter.put("/update", Auth, updateuserdetails);
 userrouter.put("/avatar", Auth, Upload.single("avatar"), UploadAvatar);
 
 export default userrouter;

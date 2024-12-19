@@ -1,5 +1,6 @@
 import Usermodel from "../models/user-model.js";
-import crypto from "crypto";
+
+import bcrypt from "bcryptjs";
 
 import Sendemail from "../utils/sendemail.js";
 import VerifyEmailTemplate from "../utils/varifyemailtemplate.js";
@@ -9,22 +10,13 @@ import {
 } from "../utils/genrateTokens.js";
 import uploadImage from "../utils/imageuploadcloudinary.js";
 
-const hashPassword = (password, salt) => {
-  const iterations = 10000;
-  const keyLength = 64;
-  const digest = "sha256";
-  const hashedPassword = crypto.pbkdf2Sync(
-    password,
-    salt,
-    iterations,
-    keyLength,
-    digest
-  );
-  return hashedPassword.toString("hex");
+const hashPassword = async (password, saltRounds = 10) => {
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  return hashedPassword;
 };
 
-const generateSalt = () => {
-  return crypto.randomBytes(16).toString("hex");
+const comparePassword = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
 };
 
 export const Registeruser = async (req, res) => {
@@ -46,15 +38,13 @@ export const Registeruser = async (req, res) => {
       });
     }
 
-    const salt = await generateSalt();
-    const hashedPassword = await hashPassword(password, salt);
+    const hashedPassword = await hashPassword(password);
 
     const newUser = new Usermodel({
       name,
       email,
       password: hashedPassword,
       mobile,
-      salt,
     });
 
     await newUser.save();
@@ -104,8 +94,8 @@ export const Loginuser = async (req, res) => {
       });
     }
 
-    const isPasswordValid = await hashPassword(password, user.salt);
-    if (isPasswordValid !== user.password) {
+    const isPasswordValid = await comparePassword(password, user.password);
+    if (!isPasswordValid) {
       return res.status(400).json({
         message: "Invalid password",
         success: false,
@@ -234,6 +224,45 @@ export const UploadAvatar = async (req, res) => {
         _id: userId,
         avatar: upload.url,
       },
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
+
+export const updateuserdetails = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const { name, email, mobile, password } = req.body;
+    const user = await Usermodel.findOne({ _id: userId });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found", success: false });
+    }
+
+    let hashpass = "";
+
+    if (password) {
+      hashpass = await hashPassword(password);
+    }
+
+    const updateduser = await Usermodel.findOneAndUpdate(
+      { _id: userId },
+      {
+        ...(name && { name: name }),
+        ...(email && { email: email }),
+        ...(mobile && { mobile: mobile }),
+        ...(password && { password: hashpass }),
+      },
+      { new: true }
+    );
+    res.status(200).json({
+      message: "User details updated successfully",
+      data: updateduser,
       success: true,
     });
   } catch (error) {
