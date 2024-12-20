@@ -1,6 +1,7 @@
 import Usermodel from "../models/user-model.js";
 
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 import Sendemail from "../utils/sendemail.js";
 import VerifyEmailTemplate from "../utils/varifyemailtemplate.js";
@@ -9,6 +10,9 @@ import {
   GenrateRefreshToken,
 } from "../utils/genrateTokens.js";
 import uploadImage from "../utils/imageuploadcloudinary.js";
+import GenrateOTP from "../utils/genrateOtp.js";
+import ForgotPasswordTemplate from "../utils/forgotpasswordtemplate.js";
+import PasswordResetedTemplate from "../utils/passwordreseted.js";
 
 const hashPassword = async (password, saltRounds = 10) => {
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -268,5 +272,205 @@ export const updateuserdetails = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message || error, success: false });
+  }
+};
+
+export const Forgotpassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res
+        .status(400)
+        .json({ message: "Please enter your email", success: false });
+    }
+
+    const user = await Usermodel.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found", success: false });
+    }
+
+    const otp = GenrateOTP();
+    const expireTime = new Date() + 60 * 60 * 1000; // 1hr
+
+    const updateduser = await Usermodel.findOneAndUpdate(
+      { _id: user._id },
+      {
+        forgot_password_otp: otp,
+        forgot_password_otp_expire: new Date(expireTime).toISOString(),
+      },
+      { new: true }
+    );
+    await Sendemail({
+      to: email,
+      subject: "Forgot password",
+      html: ForgotPasswordTemplate({
+        name: user.name,
+        otp: otp,
+      }),
+    });
+
+    res.status(200).json({
+      message: "OTP sent successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
+
+export const VerifyForgotpasswordOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res
+        .status(400)
+        .json({ message: "Please enter your email and otp", success: false });
+    }
+    const user = await Usermodel.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found", success: false });
+    }
+
+    const currenttime = new Date().toISOString();
+
+    if (user.forgot_password_otp_expire > currenttime) {
+      return res.status(400).json({ message: "OTP expired", success: false });
+    }
+
+    if (otp !== user.forgot_password_otp) {
+      return res.status(400).json({ message: "Invalid OTP", success: false });
+    }
+    res.status(200).json({
+      message: "OTP verified successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
+
+export const Resetpassword = async (req, res) => {
+  try {
+    const { email, newpassword } = req.body;
+    if (!email || !newpassword) {
+      return res.status(400).json({
+        message: "Please enter your email and new password",
+        success: false,
+      });
+    }
+    const user = await Usermodel.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found", success: false });
+    }
+
+    const ispasswordsameasold = await comparePassword(
+      newpassword,
+      user.password
+    );
+    if (ispasswordsameasold) {
+      return res.status(400).json({
+        message: "new password should not be same as old password",
+        success: false,
+      });
+    }
+    const hashpass = await hashPassword(newpassword);
+    const updateduser = await Usermodel.findOneAndUpdate(
+      { _id: user._id },
+      {
+        password: hashpass,
+      },
+      { new: true }
+    );
+
+    await Sendemail({
+      to: email,
+      subject: "Password reset",
+      html: PasswordResetedTemplate({
+        name: user.name,
+        url: `${process.env.CLIENT_URL}/login`,
+      }),
+    });
+
+    res.status(200).json({
+      message: "Password reset successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
+
+export const RefreshAccessToken = async (req, res) => {
+  try {
+    const refreshToken =
+      req.cookies?.refreshToken || req.header?.authorization?.split(" ")[1];
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: "No refresh token provided",
+        success: false,
+      });
+    }
+
+    const user = await Usermodel.findOne({ refresh_token: refreshToken });
+    if (!user) {
+      return res.status(401).json({
+        message: "Invalid refresh token",
+        success: false,
+      });
+    }
+
+    try {
+      const verifyToken = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_ACCESS_TOKEN_SECRET
+      );
+
+      if (!verifyToken) {
+        return res.status(401).json({
+          message: "Invalid refresh token",
+          success: false,
+        });
+      }
+
+      const newaccessToken = await GenrateAccessToken(
+        verifyToken._id,
+        user.name
+      );
+
+      res.cookie("accessToken", newaccessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "None",
+      });
+
+      return res.status(200).json({
+        message: "Access token refreshed successfully",
+        success: true,
+        data: {
+          newaccessToken,
+        },
+      });
+    } catch (error) {
+      return res.status(401).json({
+        message: "Invalid or expired refresh token",
+        success: false,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: error.message || error,
+      success: false,
+    });
   }
 };
