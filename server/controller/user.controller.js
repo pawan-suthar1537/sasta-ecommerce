@@ -115,12 +115,15 @@ export const Loginuser = async (req, res) => {
       sameSite: "Lax",
     };
 
+    const user_name = user.name;
+
     res.cookie("accessToken", accesstoken, cookies_option);
     res.cookie("refreshToken", refreshtoken, cookies_option);
 
     res.status(200).json({
       message: "User logged in successfully",
       success: true,
+      user_name,
       data: {
         accesstoken,
         refreshtoken,
