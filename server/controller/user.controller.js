@@ -109,6 +109,10 @@ export const Loginuser = async (req, res) => {
     const accesstoken = await GenrateAccessToken(user._id, user.name);
     const refreshtoken = await GenrateRefreshToken(user._id, user.name);
 
+    const updateuserdetails = await Usermodel.findByIdAndUpdate(user?._id, {
+      last_login: new Date(),
+    });
+
     const cookies_option = {
       httpOnly: true,
       secure: false,
@@ -348,6 +352,12 @@ export const VerifyForgotpasswordOTP = async (req, res) => {
     if (otp !== user.forgot_password_otp) {
       return res.status(400).json({ message: "Invalid OTP", success: false });
     }
+
+    const updateduser = await Usermodel.findOneAndUpdate(
+      { _id: user?._id },
+      { forgot_password_otp: "", forgot_password_otp_expire: "" },
+      { new: true }
+    );
     res.status(200).json({
       message: "OTP verified successfully",
       success: true,
@@ -475,5 +485,29 @@ export const RefreshAccessToken = async (req, res) => {
       message: error.message || error,
       success: false,
     });
+  }
+};
+
+export const getloginuserdetails = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await Usermodel.findOne({ _id: userId }).select(
+      "-password -refresh_token"
+    );
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found", success: false });
+    }
+    return res.status(200).json({
+      message: "User details fetched successfully",
+      data: user,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: error.message || error, success: false });
   }
 };

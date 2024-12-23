@@ -58,7 +58,7 @@ const Login = () => {
 
         if (res.data.success) {
           toast.success(`welcome back ${res.data.user_name}`);
-          localStorage.setItem("accessToken", res.data.data.accesstoken);
+          localStorage.setItem("accesstoken", res.data.data.accesstoken);
           localStorage.setItem("refreshtoken", res.data.data.refreshtoken);
           navigate("/");
         } else {

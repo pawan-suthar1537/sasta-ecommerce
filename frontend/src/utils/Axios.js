@@ -10,10 +10,10 @@ const Axios = axios.create({
 // seding access token in header
 Axios.interceptors.request.use(
   async (config) => {
-    const accessToken = localStorage.getItem("accesstoken");
+    const accesstoken = localStorage.getItem("accesstoken");
 
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    if (accesstoken) {
+      config.headers.Authorization = `Bearer ${accesstoken}`;
     }
 
     return config;
