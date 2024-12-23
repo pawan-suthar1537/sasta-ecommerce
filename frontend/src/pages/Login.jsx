@@ -57,8 +57,10 @@ const Login = () => {
         const res = await Axios.post("/api/user/login", formData);
 
         if (res.data.success) {
-          navigate("/");
           toast.success(`welcome back ${res.data.user_name}`);
+          localStorage.setItem("accessToken", res.data.data.accesstoken);
+          localStorage.setItem("refreshtoken", res.data.data.refreshtoken);
+          navigate("/");
         } else {
           toast.error(res.data.message);
         }
