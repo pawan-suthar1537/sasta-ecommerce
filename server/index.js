@@ -10,12 +10,12 @@ import userrouter from "./routes/user.route.js";
 
 const app = express();
 
-const FRONTEND_URL = process.env.CLIENT_URL || "http://localhost:5173";
-const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.CLIENT_URL;
+const PORT = process.env.PORT;
 
 app.use(
   cors({
-    origin: FRONTEND_URL,
+    origin: [FRONTEND_URL, "*"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
