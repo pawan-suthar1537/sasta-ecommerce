@@ -33,8 +33,25 @@ const userSlice = createSlice({
       state.order_history = action.payload?.order_history;
       state.role = action.payload?.role;
     },
+    logout: (state) => {
+      state._id = "";
+      state.name = "";
+      state.email = "";
+      state.avatar = "";
+      state.mobile = "";
+      state.verify_email = "";
+      state.last_login = "";
+      state.status = "";
+      state.address_details = [];
+      state.shopping_cart = [];
+      state.order_history = [];
+      state.role = "";
+    },
+    updateavatar: (state, action) => {
+      state.avatar = action.payload;
+    },
   },
 });
 
-export const { setUserDetails } = userSlice.actions;
+export const { setUserDetails, logout, updateavatar } = userSlice.actions;
 export default userSlice.reducer;

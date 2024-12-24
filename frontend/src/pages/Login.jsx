@@ -3,6 +3,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Axios from "../utils/Axios";
+import FetchUsersDetails from "../utils/FetchUsersDetails";
+import { useDispatch } from "react-redux";
+import { setUserDetails } from "../store/UserSlice";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -13,6 +16,7 @@ const Login = () => {
   const [loading, setloading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const validateForm = () => {
     const newErrors = {};
@@ -60,6 +64,10 @@ const Login = () => {
           toast.success(`welcome back ${res.data.user_name}`);
           localStorage.setItem("accesstoken", res.data.data.accesstoken);
           localStorage.setItem("refreshtoken", res.data.data.refreshtoken);
+          const userdata = await FetchUsersDetails();
+          if (userdata?.data) {
+            dispatch(setUserDetails(userdata.data));
+          }
           navigate("/");
         } else {
           toast.error(res.data.message);
