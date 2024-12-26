@@ -45,7 +45,7 @@ const Dashboard = () => {
     <section>
       <div className="container mx-auto grid grid-cols-[100px,1fr] lg:grid-cols-[250px,1fr] min-h-[82vh]">
         {/* Left menu */}
-        <div className=" p-1 h-full border-r">
+        <div className=" p-1 h-full border-r overflow-y-auto max-h-[calc(100vh-96px)]">
           <div className="space-y-4">
             <p className="block text-gray-700 text-center w-full rounded flex items-center gap-2">
               {user?.role.toLowerCase() === "ADMIN" ? "Admin" : "User"}

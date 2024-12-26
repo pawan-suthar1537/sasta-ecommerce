@@ -4,7 +4,7 @@ import Axios from "../utils/Axios";
 import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
-const UploadcategoryModel = ({ close }) => {
+const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
   const [categoryData, setCategoryData] = useState({
     name: "",
     image: "",
@@ -47,7 +47,7 @@ const UploadcategoryModel = ({ close }) => {
         throw new Error("Failed to create category");
       }
       toast.success(`Category ${categoryData.name} created successfully`);
-      close();
+      handleCategoryAdded();
     } catch (error) {
       console.error("Error creating category:", error);
       if (error.response && error.response.data) {

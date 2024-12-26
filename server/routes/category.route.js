@@ -1,5 +1,8 @@
 import express from "express";
-import { CreateCategory } from "../controller/category.controller.js";
+import {
+  CreateCategory,
+  GetAllCategory,
+} from "../controller/category.controller.js";
 import { Auth } from "../middlewares/auth.js";
 import Upload from "../middlewares/multer.js";
 const CategoryRouter = express.Router();
@@ -9,6 +12,11 @@ CategoryRouter.post(
   Auth,
   Upload.single("image"),
   CreateCategory
+);
+CategoryRouter.get(
+  "/allcategory",
+
+  GetAllCategory
 );
 
 export default CategoryRouter;

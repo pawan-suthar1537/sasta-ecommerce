@@ -51,3 +51,18 @@ export const CreateCategory = async (req, res) => {
     res.status(500).json({ message: error.message || error, success: false });
   }
 };
+
+export const GetAllCategory = async (req, res) => {
+  try {
+    const categories = await Categorymodel.find();
+
+    res.status(200).json({
+      message: "All Categories",
+      success: true,
+      data: categories,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
