@@ -6,7 +6,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_CLOUD_SECRET,
 });
 
-const uploadImage = async (file, username) => {
+export const uploadImage = async (file, username) => {
   console.log("username", username);
   if (!username) {
     throw new Error("Username is required");
@@ -37,4 +37,28 @@ const uploadImage = async (file, username) => {
   return upload;
 };
 
-export default uploadImage;
+export const uploadCategoryImage = async (file, name) => {
+  if (!file || !file.buffer) {
+    throw new Error("File is required");
+  }
+  const buffer = file?.buffer || Buffer.from(await file.arrayBuffer());
+
+  const folderPath = `sasta_ecom/category/${name}`;
+
+  const upload = await new Promise((res, rej) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: folderPath,
+        },
+        (err, result) => {
+          if (err) {
+            rej(err);
+          }
+          res(result);
+        }
+      )
+      .end(buffer);
+  });
+  return upload;
+};

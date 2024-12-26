@@ -11,6 +11,10 @@ import Dashboard from "../laout/Dashboard";
 import Profile from "../pages/Profile";
 import MyOrders from "../pages/MyOrders";
 import Address from "../pages/Address";
+import Category from "../pages/Category";
+import SubCategory from "../pages/SubCategory";
+import AllProduct from "../pages/AllProduct";
+import AddProduct from "../pages/AddProduct";
 
 const router = createBrowserRouter([
   {
@@ -60,6 +64,22 @@ const router = createBrowserRouter([
           {
             path: "address",
             element: <Address />,
+          },
+          {
+            path: "category",
+            element: <Category />,
+          },
+          {
+            path: "subcategory",
+            element: <SubCategory />,
+          },
+          {
+            path: "allproduct",
+            element: <AllProduct />,
+          },
+          {
+            path: "addproduct",
+            element: <AddProduct />,
           },
         ],
       },

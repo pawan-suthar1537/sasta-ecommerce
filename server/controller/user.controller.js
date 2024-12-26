@@ -9,10 +9,11 @@ import {
   GenrateAccessToken,
   GenrateRefreshToken,
 } from "../utils/genrateTokens.js";
-import uploadImage from "../utils/imageuploadcloudinary.js";
+
 import GenrateOTP from "../utils/genrateOtp.js";
 import ForgotPasswordTemplate from "../utils/forgotpasswordtemplate.js";
 import PasswordResetedTemplate from "../utils/passwordreseted.js";
+import { uploadImage } from "../utils/imageuploadcloudinary.js";
 
 const hashPassword = async (password, saltRounds = 10) => {
   const hashedPassword = await bcrypt.hash(password, saltRounds);
