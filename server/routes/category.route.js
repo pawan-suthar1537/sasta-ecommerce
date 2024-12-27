@@ -1,6 +1,7 @@
 import express from "express";
 import {
   CreateCategory,
+  DeleteCategory,
   GetAllCategory,
   Updatecategory,
 } from "../controller/category.controller.js";
@@ -25,6 +26,12 @@ CategoryRouter.put(
   Upload.single("image"),
 
   Updatecategory
+);
+CategoryRouter.delete(
+  "/delete_category",
+  Auth,
+
+  DeleteCategory
 );
 
 export default CategoryRouter;

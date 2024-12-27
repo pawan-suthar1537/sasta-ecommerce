@@ -113,3 +113,30 @@ export const Updatecategory = async (req, res) => {
     res.status(500).json({ message: error.message || error, success: false });
   }
 };
+
+export const DeleteCategory = async (req, res) => {
+  try {
+    const { categoryId } = req.body;
+    console.log(categoryId);
+    if (!categoryId) {
+      return res
+        .status(400)
+        .json({ message: "Category ID is required", success: false });
+    }
+    const category = await Categorymodel.findById(categoryId);
+    if (!category) {
+      return res.status(404).json({
+        message: "Category not found",
+        success: false,
+      });
+    }
+    await Categorymodel.findByIdAndDelete(categoryId);
+    res.status(200).json({
+      message: `Category ${category.name} deleted successfully`,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};

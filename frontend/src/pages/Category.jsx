@@ -4,6 +4,8 @@ import nodata from "../assets/nodata.jpg";
 import Axios from "../utils/Axios";
 import { VscEdit } from "react-icons/vsc";
 import UpdateCategorymodel from "../components/UpdateCategorymodel";
+import { MdDeleteOutline } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const Category = () => {
   const [open, setopen] = useState(false);
@@ -11,6 +13,7 @@ const Category = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [loading, setloading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selecteddeleteCategory, setselecteddeleteCategory] = useState(null);
 
   const fetchallCategory = async () => {
     try {
@@ -45,6 +48,30 @@ const Category = () => {
   const handleEditClick = (category) => {
     setSelectedCategory(category);
     setopenupdate(true);
+  };
+  const handleDeleteClick = async (category) => {
+    setselecteddeleteCategory(category);
+    console.log("selected delete category", category);
+    try {
+      const res = await Axios({
+        method: "DELETE",
+        url: `/api/category/delete_category/`,
+        data: { categoryId: category._id },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        },
+      });
+      console.log("response of category delete", res.data);
+      if (!res.data.success === true) {
+        toast.error("Failed to delete category");
+      }
+      toast.success(`Category  deleted successfully`);
+      setselecteddeleteCategory(null);
+      fetchallCategory();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete category");
+    }
   };
 
   return (
@@ -115,12 +142,20 @@ const Category = () => {
                   alt="category image "
                   className="w-32 h-32 object-cover rounded-md  "
                 />
-                <button
-                  onClick={() => handleEditClick(category)}
-                  className="absolute top-0 right-12 cursor-pointer bg-gray-100 p-1 rounded-full"
-                >
-                  <VscEdit size={20} />
-                </button>
+                <div className="flex flex-col items-center justify-center">
+                  <button
+                    onClick={() => handleEditClick(category)}
+                    className="absolute top-0 right-14 cursor-pointer bg-gray-100 p-1 rounded-full"
+                  >
+                    <VscEdit size={18} />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteClick(category)}
+                    className="absolute top-0 right-5 cursor-pointer bg-gray-100 p-1 rounded-full"
+                  >
+                    <MdDeleteOutline size={18} />
+                  </button>
+                </div>
                 <h2 className="">{category.name}</h2>
               </div>
             ))}
