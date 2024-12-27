@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import UploadcategoryModel from "../components/UploadcategoryModel";
 import nodata from "../assets/nodata.jpg";
 import Axios from "../utils/Axios";
+import { VscEdit } from "react-icons/vsc";
+import UpdateCategorymodel from "../components/UpdateCategorymodel";
 
 const Category = () => {
   const [open, setopen] = useState(false);
+  const [openupdate, setopenupdate] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
   const [loading, setloading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const fetchallCategory = async () => {
     try {
@@ -33,9 +37,18 @@ const Category = () => {
     fetchallCategory();
     setopen();
   };
+  const handleCategoryUpdated = () => {
+    fetchallCategory();
+    setopenupdate(false);
+  };
+
+  const handleEditClick = (category) => {
+    setSelectedCategory(category);
+    setopenupdate(true);
+  };
 
   return (
-    <section>
+    <section className=" relative z-[1]">
       <div className="p-2  text-2xl flex items-center justify-between">
         <h2 className="font-semibold">Category</h2>
         <button
@@ -49,6 +62,14 @@ const Category = () => {
         <UploadcategoryModel
           close={() => setopen(!open)}
           handleCategoryAdded={handleCategoryAdded}
+        />
+      )}
+
+      {openupdate && selectedCategory && (
+        <UpdateCategorymodel
+          close={() => setopenupdate(false)}
+          category={selectedCategory}
+          handleCategoryUpdated={handleCategoryUpdated}
         />
       )}
 
@@ -81,18 +102,25 @@ const Category = () => {
           />
         </div>
       ) : (
-        <div className="p-4  grid grid-cols-2 md:grid-cols-3  lg:grid-cols-5  justify-center ">
+        <div className=" grid grid-cols-2 md:grid-cols-3  lg:grid-cols-5  justify-center  ">
           {categoryData &&
             categoryData.map((category, i) => (
               <div
                 key={i}
-                className="justify-center items-center flex flex-col  p-2"
+                className="justify-center items-center flex flex-col p-2 relative"
               >
                 <img
+                  // onClick={() => console.log(category?._id)}
                   src={category.image}
                   alt="category image "
-                  className="w-32 h-32 object-cover rounded-md "
+                  className="w-32 h-32 object-cover rounded-md  "
                 />
+                <button
+                  onClick={() => handleEditClick(category)}
+                  className="absolute top-0 right-12 cursor-pointer bg-gray-100 p-1 rounded-full"
+                >
+                  <VscEdit size={20} />
+                </button>
                 <h2 className="">{category.name}</h2>
               </div>
             ))}

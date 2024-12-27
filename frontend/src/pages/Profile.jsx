@@ -13,6 +13,7 @@ const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setloading] = useState(false);
+  const [avatarLoading, setavatarLoading] = useState(false);
   const [userdata, setuserdata] = useState({
     name: user.name,
     email: user.email,
@@ -41,6 +42,7 @@ const Profile = () => {
     formData.append("avatar", selectedFile);
 
     try {
+      setavatarLoading(true);
       const response = await Axios({
         method: "PUT",
         url: "/api/user/avatar",
@@ -60,8 +62,11 @@ const Profile = () => {
       setIsModalOpen(false);
       setSelectedFile(null);
     } catch (error) {
+      setavatarLoading(false);
       console.error(error);
       toast.error("Error updating profile image.");
+    } finally {
+      setavatarLoading(false);
     }
   };
 
@@ -187,7 +192,7 @@ const Profile = () => {
                 className="px-4 py-2 bg-blue-500 text-white rounded-lg"
                 onClick={handleSave}
               >
-                Save
+                {avatarLoading ? "loading..." : "Save"}
               </button>
             </div>
           </div>

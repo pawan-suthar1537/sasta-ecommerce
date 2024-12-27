@@ -20,7 +20,7 @@ userrouter.post("/register", Registeruser);
 userrouter.post("/verify-email", Verifyemail);
 userrouter.post("/refreshAccessToken", RefreshAccessToken);
 userrouter.post("/login", Loginuser);
-userrouter.get("/logout", Auth, Logout);
+userrouter.get("/logout", Logout);
 userrouter.put("/update", Auth, updateuserdetails);
 userrouter.get("/user_detail", Auth, getloginuserdetails);
 userrouter.put("/forgotpassword", Forgotpassword);

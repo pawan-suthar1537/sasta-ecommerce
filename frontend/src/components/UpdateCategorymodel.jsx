@@ -4,19 +4,21 @@ import Axios from "../utils/Axios";
 import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
-const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
-  const [categoryData, setCategoryData] = useState({
-    name: "",
-    image: "",
+const UpdateCategorymodel = ({ close, category, handleCategoryUpdated }) => {
+  console.log("category", category);
+  const [updatedCategory, setUpdatedCategory] = useState({
+    // eslint-disable-next-line react/prop-types
+    name: category?.name || "",
+    image: null,
+    categoryId: category?._id || "", // Ensure categoryId is a valid string
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // To store error messages
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log(" category image file", file);
     if (file) {
-      setCategoryData((prev) => ({ ...prev, image: file }));
+      setUpdatedCategory((prev) => ({ ...prev, image: file }));
     }
   };
 
@@ -27,29 +29,32 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
 
     try {
       const formData = new FormData();
-      formData.append("name", categoryData.name);
-      formData.append("image", categoryData.image);
+      formData.append("name", updatedCategory?.name);
+      formData.append("categoryId", updatedCategory?.categoryId);
+      if (updatedCategory.image) {
+        formData.append("image", updatedCategory?.image);
+      }
 
-      console.log("form data category", formData);
+      console.log("form data category for update category", formData);
 
       const response = await Axios({
-        method: "POST",
-        url: "/api/category/add_category",
+        method: "PUT",
+        url: "/api/category/update_category",
         data: formData,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
         },
       });
 
-      console.log("response of category create", response.data);
+      console.log("response of category update", response.data);
 
       if (!response.data.success === true) {
-        throw new Error("Failed to create category");
+        throw new Error("Failed to update category");
       }
-      toast.success(`Category ${categoryData.name} created successfully`);
-      handleCategoryAdded();
+      toast.success(`Category ${updatedCategory.name} updated successfully`);
+      handleCategoryUpdated();
     } catch (error) {
-      console.error("Error creating category:", error);
+      console.error("Error updating category:", error);
       if (error.response && error.response.data) {
         setErrorMessage(error.response.data.message);
       } else {
@@ -64,7 +69,9 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-center justify-center">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Add New Category</h3>
+          <h3 className="text-lg font-semibold">
+            update {updatedCategory.name} Category
+          </h3>
           <button
             onClick={() => close()}
             className="p-1 hover:bg-gray-100 rounded-full"
@@ -81,13 +88,16 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">
-              Category Name
+              update Name
             </label>
             <input
               type="text"
-              value={categoryData.name}
+              value={updatedCategory.name}
               onChange={(e) =>
-                setCategoryData((prev) => ({ ...prev, name: e.target.value }))
+                setUpdatedCategory((prev) => ({
+                  ...prev,
+                  name: e.target.value,
+                }))
               }
               className="w-full border rounded p-2"
               required
@@ -96,7 +106,7 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
 
           <div>
             <label className="block text-sm font-medium mb-1">
-              Category Image
+              update Image
             </label>
             <input
               type="file"
@@ -117,10 +127,12 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
             </button>
             <button
               type="submit"
-              disabled={!categoryData.name || isLoading}
+              disabled={
+                !updatedCategory.name || !updatedCategory.image || isLoading
+              }
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
             >
-              {isLoading ? "Saving..." : "Save"}
+              {isLoading ? "Updating..." : "Update"}
             </button>
           </div>
         </form>
@@ -129,4 +141,4 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
   );
 };
 
-export default UploadcategoryModel;
+export default UpdateCategorymodel;

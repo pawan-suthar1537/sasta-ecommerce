@@ -66,3 +66,50 @@ export const GetAllCategory = async (req, res) => {
     res.status(500).json({ message: error.message || error, success: false });
   }
 };
+
+export const Updatecategory = async (req, res) => {
+  try {
+    const { categoryId, name } = req.body;
+    const image = req.file;
+
+    console.log(categoryId, name);
+    console.log(image);
+
+    if (!categoryId || !name) {
+      return res
+        .status(400)
+        .json({ message: "Category ID and name are required", success: false });
+    }
+
+    const category = await Categorymodel.findById(categoryId);
+    if (!category) {
+      return res.status(404).json({
+        message: "Category not found",
+        success: false,
+      });
+    }
+
+    category.name = name;
+
+    if (image) {
+      const upload = await uploadCategoryImage(image, name);
+      if (!upload) {
+        return res
+          .status(400)
+          .json({ message: "Failed to upload Category image", success: false });
+      }
+      category.image = upload.secure_url;
+    }
+
+    await category.save();
+
+    res.status(200).json({
+      message: `Category ${category.name} updated successfully`,
+      success: true,
+      data: category,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
