@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Use sessionStorage for session-based persistence
 import userReducer from "./UserSlice";
+import ProductSlice from "./ProductSlice";
 import { combineReducers } from "redux";
 
 const persistConfig = {
@@ -12,6 +13,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
+  product: ProductSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

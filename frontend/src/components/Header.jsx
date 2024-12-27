@@ -38,7 +38,7 @@ const Header = () => {
     }
   };
   return (
-    <header className=" h-28 lg:h-16  sticky top-0 flex  flex-col justify-center gap-1 bg-white">
+    <header className=" h-28 lg:h-16  sticky top-0 flex  flex-col justify-center gap-1 bg-white z-50">
       <div className="container flex mx-auto items-center justify-between px-4">
         {/* logo */}
         <Link to="/" className="h-full">

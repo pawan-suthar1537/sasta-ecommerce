@@ -1,4 +1,6 @@
 import Categorymodel from "../models/category-model.js";
+import Productmodel from "../models/product-model.js";
+import Subcategorymodel from "../models/subcategory-model.js";
 import { uploadCategoryImage } from "../utils/imageuploadcloudinary.js";
 
 export const CreateCategory = async (req, res) => {
@@ -54,7 +56,7 @@ export const CreateCategory = async (req, res) => {
 
 export const GetAllCategory = async (req, res) => {
   try {
-    const categories = await Categorymodel.find();
+    const categories = await Categorymodel.find().sort({ createdAt: -1 });
 
     res.status(200).json({
       message: "All Categories",
@@ -117,23 +119,44 @@ export const Updatecategory = async (req, res) => {
 export const DeleteCategory = async (req, res) => {
   try {
     const { categoryId } = req.body;
-    console.log(categoryId);
+
     if (!categoryId) {
       return res
         .status(400)
         .json({ message: "Category ID is required", success: false });
     }
-    const category = await Categorymodel.findById(categoryId);
-    if (!category) {
+
+    const checksubcategory = await Subcategorymodel.find({
+      category: {
+        $in: [categoryId],
+      },
+    }).countDocuments();
+    const checkproduct = await Productmodel.find({
+      category: {
+        $in: [categoryId],
+      },
+    }).countDocuments();
+
+    if (checksubcategory > 0 || checkproduct > 0) {
+      return res.status(400).json({
+        message:
+          "Category cannot be deleted because it has subcategories or products associated with it",
+        success: false,
+      });
+    }
+
+    const Delcategory = await Categorymodel.findById(categoryId);
+    if (!Delcategory) {
       return res.status(404).json({
         message: "Category not found",
         success: false,
       });
     }
-    await Categorymodel.findByIdAndDelete(categoryId);
+    await Categorymodel.deleteOne({ _id: categoryId });
     res.status(200).json({
-      message: `Category ${category.name} deleted successfully`,
+      message: `Category ${Delcategory.name} deleted successfully`,
       success: true,
+      data: Delcategory,
     });
   } catch (error) {
     console.log(error);

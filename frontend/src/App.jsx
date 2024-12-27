@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import FetchUsersDetails from "./utils/FetchUsersDetails";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./store/UserSlice";
+import Axios from "./utils/Axios";
+import { setallcategory } from "./store/ProductSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -20,8 +22,24 @@ function App() {
       console.log("No user found");
     }
   };
+
+  const fetchallCategory = async () => {
+    try {
+      const res = await Axios({
+        method: "GET",
+        url: "/api/category/allcategory",
+      });
+      console.log("res of fetch all category", res.data.data);
+      // setCategoryData(res.data.data || []);
+      dispatch(setallcategory(res.data.data));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchuser();
+    fetchallCategory();
   }, []);
   return (
     <>

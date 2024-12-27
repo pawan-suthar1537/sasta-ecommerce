@@ -12,6 +12,7 @@ import { GrDatabase } from "react-icons/gr";
 import { IoMdAdd } from "react-icons/io";
 import { CiShoppingCart } from "react-icons/ci";
 import { ImAddressBook } from "react-icons/im";
+import IsAdmin from "../utils/Isadmin";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -48,58 +49,73 @@ const Dashboard = () => {
         <div className=" p-1 h-full border-r overflow-y-auto max-h-[calc(100vh-96px)]">
           <div className="space-y-4">
             <p className="block text-gray-700 text-center w-full rounded flex items-center gap-2">
-              {user?.role.toLowerCase() === "ADMIN" ? "Admin" : "User"}
+              {user?.role === "ADMIN" ? "ADMIN" : "USER"}
             </p>
-            <Link
-              to="/dashboard/category"
-              className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
-            >
-              <BiCategoryAlt className="w-5 h-5" />
-              <span>Category</span>
-            </Link>
-            <Link
-              to="/dashboard/subcategory"
-              className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
-            >
-              <TiFlowChildren className="w-5 h-5" />
-              <span>Sub Category</span>
-            </Link>
-            <Link
-              to="/dashboard/allproduct"
-              className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
-            >
-              <GrDatabase className="w-5 h-5" />
-              <span>All Product</span>
-            </Link>
-            <Link
-              to="/dashboard/addproduct"
-              className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
-            >
-              <IoMdAdd className="w-5 h-5" />
-              <span>Add Product</span>
-            </Link>
-            <Link
-              to="/dashboard/profile"
-              className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
-            >
-              <FaUser className="w-5 h-5" />
-              <span>Profile</span>
-            </Link>
+            {IsAdmin(user?.role) && (
+              <>
+                <Link
+                  to="/dashboard/profile"
+                  className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
+                >
+                  <FaUser className="w-5 h-5" />
+                  <span>Profile</span>
+                </Link>
+                <Link
+                  to="/dashboard/category"
+                  className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
+                >
+                  <BiCategoryAlt className="w-5 h-5" />
+                  <span>Category</span>
+                </Link>
+                <Link
+                  to="/dashboard/subcategory"
+                  className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
+                >
+                  <TiFlowChildren className="w-5 h-5" />
+                  <span>Sub Category</span>
+                </Link>
+                <Link
+                  to="/dashboard/addproduct"
+                  className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
+                >
+                  <IoMdAdd className="w-5 h-5" />
+                  <span>Add Product</span>
+                </Link>
+                <Link
+                  to="/dashboard/allproduct"
+                  className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
+                >
+                  <GrDatabase className="w-5 h-5" />
+                  <span>All Product</span>
+                </Link>
+              </>
+            )}
 
-            <Link
-              to="/dashboard/myorder"
-              className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
-            >
-              <CiShoppingCart className="w-5 h-5" />
-              <span>My Order</span>
-            </Link>
-            <Link
-              to="/dashboard/address"
-              className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
-            >
-              <ImAddressBook className="w-5 h-5" />
-              <span>My Address</span>
-            </Link>
+            {!IsAdmin(user?.role) && (
+              <>
+                <Link
+                  to="/dashboard/profile"
+                  className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
+                >
+                  <FaUser className="w-5 h-5" />
+                  <span>Profile</span>
+                </Link>
+                <Link
+                  to="/dashboard/myorder"
+                  className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
+                >
+                  <CiShoppingCart className="w-5 h-5" />
+                  <span>My Orders</span>
+                </Link>
+                <Link
+                  to="/dashboard/address"
+                  className="block text-gray-700 hover:bg-gray-200 p-2 rounded flex items-center gap-2"
+                >
+                  <ImAddressBook className="w-5 h-5" />
+                  <span>My Address</span>
+                </Link>
+              </>
+            )}
 
             <button
               onClick={handleLogout}

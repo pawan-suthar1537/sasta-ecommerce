@@ -6,6 +6,8 @@ import { VscEdit } from "react-icons/vsc";
 import UpdateCategorymodel from "../components/UpdateCategorymodel";
 import { MdDeleteOutline } from "react-icons/md";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { setallcategory } from "../store/ProductSlice";
 
 const Category = () => {
   const [open, setopen] = useState(false);
@@ -13,28 +15,27 @@ const Category = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [loading, setloading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selecteddeleteCategory, setselecteddeleteCategory] = useState(null);
+  const dispatch = useDispatch();
+
+  const allcategory = useSelector((state) => state.product.allcategory);
 
   const fetchallCategory = async () => {
     try {
-      setloading(true);
       const res = await Axios({
         method: "GET",
         url: "/api/category/allcategory",
       });
       console.log("res of fetch all category", res.data.data);
-      setCategoryData(res.data.data || []);
+      // setCategoryData(res.data.data || []);
+      dispatch(setallcategory(res.data.data));
     } catch (error) {
-      setloading(false);
       console.error(error);
-    } finally {
-      setloading(false);
     }
   };
 
   useEffect(() => {
-    fetchallCategory();
-  }, []);
+    setCategoryData(allcategory);
+  }, [allcategory]);
 
   const handleCategoryAdded = () => {
     fetchallCategory();
@@ -50,7 +51,6 @@ const Category = () => {
     setopenupdate(true);
   };
   const handleDeleteClick = async (category) => {
-    setselecteddeleteCategory(category);
     console.log("selected delete category", category);
     try {
       const res = await Axios({
@@ -65,8 +65,8 @@ const Category = () => {
       if (!res.data.success === true) {
         toast.error("Failed to delete category");
       }
-      toast.success(`Category  deleted successfully`);
-      setselecteddeleteCategory(null);
+      toast.success(`Category deleted successfully`);
+
       fetchallCategory();
     } catch (error) {
       console.error(error);
@@ -75,7 +75,7 @@ const Category = () => {
   };
 
   return (
-    <section className=" relative z-[1]">
+    <section className=" z-[1]">
       <div className="p-2  text-2xl flex items-center justify-between">
         <h2 className="font-semibold">Category</h2>
         <button
@@ -85,6 +85,7 @@ const Category = () => {
           Add
         </button>
       </div>
+
       {open && (
         <UploadcategoryModel
           close={() => setopen(!open)}
@@ -137,7 +138,6 @@ const Category = () => {
                 className="justify-center items-center flex flex-col p-2 relative"
               >
                 <img
-                  // onClick={() => console.log(category?._id)}
                   src={category.image}
                   alt="category image "
                   className="w-32 h-32 object-cover rounded-md  "
@@ -145,13 +145,13 @@ const Category = () => {
                 <div className="flex flex-col items-center justify-center">
                   <button
                     onClick={() => handleEditClick(category)}
-                    className="absolute top-0 right-14 cursor-pointer bg-gray-100 p-1 rounded-full"
+                    className="absolute top-0 right-14 cursor-pointer bg-green-400 p-1 rounded-full"
                   >
                     <VscEdit size={18} />
                   </button>
                   <button
                     onClick={() => handleDeleteClick(category)}
-                    className="absolute top-0 right-5 cursor-pointer bg-gray-100 p-1 rounded-full"
+                    className="absolute top-0 right-5 cursor-pointer bg-red-400 p-1  rounded-full"
                   >
                     <MdDeleteOutline size={18} />
                   </button>

@@ -10,6 +10,7 @@ const UpdateCategorymodel = ({ close, category, handleCategoryUpdated }) => {
     // eslint-disable-next-line react/prop-types
     name: category?.name || "",
     image: null,
+    // eslint-disable-next-line react/prop-types
     categoryId: category?._id || "", // Ensure categoryId is a valid string
   });
   const [isLoading, setIsLoading] = useState(false);

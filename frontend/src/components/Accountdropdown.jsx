@@ -3,11 +3,14 @@ import { FaUser } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
 import { CiSettings, CiUser } from "react-icons/ci";
 import { Link } from "react-router-dom";
+import IsAdmin from "../utils/Isadmin";
+import { useSelector } from "react-redux";
 /* eslint-disable react/prop-types */
 
 export function AccountDropdown({ user, onLogout, ismobile }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const userdata = useSelector((state) => state.user);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -56,32 +59,46 @@ export function AccountDropdown({ user, onLogout, ismobile }) {
             </p>
           </div>
 
+          {!IsAdmin(userdata?.role) && (
+            <>
+              <Link to="/dashboard/profile">
+                <button
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <FaUser className="w-4 h-4" />
+                  Profile
+                </button>
+              </Link>
+
+              <Link to="/dashboard/myorder">
+                <button
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <CiSettings className="w-4 h-4" />
+                  My Orders
+                </button>
+              </Link>
+              <Link to="/dashboard/address">
+                <button
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <CiSettings className="w-4 h-4" />
+                  My Address
+                </button>
+              </Link>
+            </>
+          )}
+
           <Link to="/dashboard/profile">
             <button
               className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
               onClick={() => setIsOpen(!isOpen)}
             >
               <FaUser className="w-4 h-4" />
-              Profile
-            </button>
-          </Link>
-
-          <Link to="/dashboard/myorder">
-            <button
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <CiSettings className="w-4 h-4" />
-              My Orders
-            </button>
-          </Link>
-          <Link to="/dashboard/address">
-            <button
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <CiSettings className="w-4 h-4" />
-              My Address
+              Dashboard
             </button>
           </Link>
 
