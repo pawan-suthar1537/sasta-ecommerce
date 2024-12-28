@@ -85,7 +85,9 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
     <section className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-center justify-center">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Update Sub Category</h3>
+          <h3 className="text-lg font-semibold">
+            Update Sub Category {subcategoryData.name}
+          </h3>
           <button
             onClick={() => close()}
             className="p-1 hover:bg-gray-100 rounded-full"

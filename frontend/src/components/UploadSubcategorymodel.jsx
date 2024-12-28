@@ -155,34 +155,36 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
             </div>
 
             {allcategory.length > 0 ? (
-              <select
-                className="w-full border  p-2"
-                onChange={(e) => {
-                  const value = e.target.value;
-                  const categoryDetails = allcategory.find(
-                    (el) => el._id == value
-                  );
-                  if (categoryDetails) {
-                    setsubcategoryData((prev) => {
-                      return {
-                        ...prev,
-                        category: [...prev.category, categoryDetails],
-                      };
-                    });
-                  }
-                }}
-              >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {allcategory?.map((cat, index) => {
-                  return (
-                    <option key={index} value={cat?._id}>
-                      {cat?.name}
-                    </option>
-                  );
-                })}
-              </select>
+              <>
+                <label className="block text-sm font-medium mb-1">
+                  Select Category
+                </label>
+                <select
+                  className="w-full border  p-2"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const categoryDetails = allcategory.find(
+                      (el) => el._id == value
+                    );
+                    if (categoryDetails) {
+                      setsubcategoryData((prev) => {
+                        return {
+                          ...prev,
+                          category: [...prev.category, categoryDetails],
+                        };
+                      });
+                    }
+                  }}
+                >
+                  {allcategory?.map((cat, index) => {
+                    return (
+                      <option key={index} value={cat?._id}>
+                        {cat?.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </>
             ) : (
               <Link
                 className="hover:text-blue-500 inline-block w-fit"

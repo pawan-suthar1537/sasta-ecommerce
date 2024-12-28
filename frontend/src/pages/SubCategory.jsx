@@ -177,19 +177,19 @@ const SubCategory = () => {
 
       {/*  render display table compoent if data is available if not show no data image */}
 
-      <div>
-        {allsubcategory.length === 0 ? (
-          <div className="flex items-center justify-center h-full lg:h-[400px] w-full">
-            <img
-              src={nodata}
-              alt="nodata"
-              className="lg:w-[25rem] lg:h-[25rem] w-[15rem] h-[15rem]"
-            />
-          </div>
-        ) : (
+      {allsubcategory.length === 0 ? (
+        <div className="flex items-center justify-center h-full lg:h-[400px] w-full">
+          <img
+            src={nodata}
+            alt="nodata"
+            className="lg:w-[25rem] lg:h-[25rem] w-[15rem] h-[15rem]"
+          />
+        </div>
+      ) : (
+        <div className=" overflow-auto w-full max-w-[76vw]">
           <DisplayTable data={allsubcategory} columns={columns} />
-        )}
-      </div>
+        </div>
+      )}
 
       {/*  modal to add new subcategory */}
       {openaddsubcategory && (
