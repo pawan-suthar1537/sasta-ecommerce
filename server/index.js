@@ -8,6 +8,7 @@ import helmet from "helmet";
 import connectDB from "./db/db.js";
 import userrouter from "./routes/user.route.js";
 import categoryRouter from "./routes/category.route.js";
+import subcategoryRouter from "./routes/subcategory.route.js";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.get("/", (_, res) => {
 
 app.use("/api/user", userrouter);
 app.use("/api/category", categoryRouter);
+app.use("/api/subcategory", subcategoryRouter);
 
 connectDB()
   .then(() => {

@@ -31,18 +31,19 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
     setErrorMessage("");
 
     try {
+      const categoryIds = subcategoryData.category.map((cat) => cat._id);
       const formData = new FormData();
       formData.append("name", subcategoryData.name);
       formData.append("image", subcategoryData.image);
-
-      console.log("form data category", formData);
+      formData.append("category", JSON.stringify(categoryIds));
 
       const response = await Axios({
         method: "POST",
-        url: "/api/category/add_category",
+        url: "api/subcategory/addsubcategory",
         data: formData,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -151,7 +152,7 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
                 );
               })}
             </div>
-            <label htmlFor="">select Sub Category</label>
+
             <select
               className="w-full border  p-2"
               onChange={(e) => {
@@ -159,14 +160,19 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
                 const categoryDetails = allcategory.find(
                   (el) => el._id == value
                 );
-                setsubcategoryData((prev) => {
-                  return {
-                    ...prev,
-                    category: [...prev.category, categoryDetails],
-                  };
-                });
+                if (categoryDetails) {
+                  setsubcategoryData((prev) => {
+                    return {
+                      ...prev,
+                      category: [...prev.category, categoryDetails],
+                    };
+                  });
+                }
               }}
             >
+              <option value="" disabled>
+                Select a category
+              </option>
               {allcategory?.map((cat, index) => {
                 return (
                   <option key={index} value={cat?._id}>
