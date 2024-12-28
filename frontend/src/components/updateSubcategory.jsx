@@ -10,6 +10,7 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
   const allcategory = useSelector((state) => state.product.allcategory);
 
   const [subcategoryData, setsubcategoryData] = useState({
+    _id: data?._id,
     name: data?.name,
     image: data?.image,
     category: data?.category || [],
@@ -19,7 +20,7 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log("sub category image file", file);
+    console.log("sub category update image file", file);
     if (file) {
       setsubcategoryData((prev) => ({ ...prev, image: file }));
     }
@@ -35,11 +36,12 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
       const formData = new FormData();
       formData.append("name", subcategoryData.name);
       formData.append("image", subcategoryData.image);
+      formData.append("_id", subcategoryData._id);
       formData.append("category", JSON.stringify(categoryIds));
 
       const response = await Axios({
-        method: "POST",
-        url: "api/subcategory/editsubcategory",
+        method: "PUT",
+        url: "api/subcategory/updatesubcategory",
         data: formData,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -67,14 +69,14 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
     }
   };
 
-  const handleremoveselectedcategory = (categoryid) => {
-    const index = subcategoryData.category.findIndex(
-      (c) => c.id === categoryid
-    );
-    subcategoryData.category.splice(index, 1);
+  const handleremoveselectedcategory = (categoryId) => {
     setsubcategoryData((prev) => {
+      const updatedCategories = prev.category.filter(
+        (c) => c._id !== categoryId
+      );
       return {
         ...prev,
+        category: updatedCategories,
       };
     });
   };
@@ -125,7 +127,6 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
               accept="image/*"
               onChange={handleImageChange}
               className="w-full border rounded p-2"
-              required
             />
           </div>
 
@@ -191,9 +192,7 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
             <button
               type="submit"
               disabled={
-                !subcategoryData.name ||
-                !subcategoryData.image ||
-                !subcategoryData.category[0]
+                !subcategoryData.name || subcategoryData.category.length === 0
               }
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
             >

@@ -70,7 +70,14 @@ const Category = () => {
       fetchallCategory();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete category");
+
+      if (error?.response?.data?.message) {
+        toast.error(error?.response?.data?.message);
+      } else {
+        toast.error(
+          `${category} cannot be deleted because it has subcategories associated with it`
+        );
+      }
     }
   };
 

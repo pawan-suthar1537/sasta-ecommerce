@@ -4,6 +4,7 @@ import Axios from "../utils/Axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { RxCross1 } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
@@ -153,34 +154,44 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
               })}
             </div>
 
-            <select
-              className="w-full border  p-2"
-              onChange={(e) => {
-                const value = e.target.value;
-                const categoryDetails = allcategory.find(
-                  (el) => el._id == value
-                );
-                if (categoryDetails) {
-                  setsubcategoryData((prev) => {
-                    return {
-                      ...prev,
-                      category: [...prev.category, categoryDetails],
-                    };
-                  });
-                }
-              }}
-            >
-              <option value="" disabled>
-                Select a category
-              </option>
-              {allcategory?.map((cat, index) => {
-                return (
-                  <option key={index} value={cat?._id}>
-                    {cat?.name}
-                  </option>
-                );
-              })}
-            </select>
+            {allcategory.length > 0 ? (
+              <select
+                className="w-full border  p-2"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const categoryDetails = allcategory.find(
+                    (el) => el._id == value
+                  );
+                  if (categoryDetails) {
+                    setsubcategoryData((prev) => {
+                      return {
+                        ...prev,
+                        category: [...prev.category, categoryDetails],
+                      };
+                    });
+                  }
+                }}
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {allcategory?.map((cat, index) => {
+                  return (
+                    <option key={index} value={cat?._id}>
+                      {cat?.name}
+                    </option>
+                  );
+                })}
+              </select>
+            ) : (
+              <Link
+                className="hover:text-blue-500 inline-block w-fit"
+                to={"/dashboard/category"}
+              >
+                {" "}
+                Create a Category first{" "}
+              </Link>
+            )}
           </div>
 
           <div className="flex justify-end space-x-2 mt-4">

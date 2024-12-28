@@ -7,6 +7,8 @@ import DisplayTable from "../components/DisplayTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import ViewFullimage from "../components/ViewFullimage";
 import UpdateSubcategory from "../components/updateSubcategory";
+import { toast } from "react-toastify";
+import nodata from "../assets/nodata.jpg";
 
 const SubCategory = () => {
   const [openaddsubcategory, setopenaddsubcategory] = useState(false);
@@ -45,6 +47,30 @@ const SubCategory = () => {
   useEffect(() => {
     fetchallSubCategory();
   }, []);
+
+  const DeleteSubcategory = async (id) => {
+    try {
+      const res = await Axios({
+        method: "DELETE",
+        url: `/api/subcategory/deletesubcategory`,
+        data: {
+          _id: id,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        },
+      });
+      console.log("res of delete subcategory", res.data);
+      if (!res.data.success === true) {
+        toast.error(res.data.message);
+        return;
+      }
+      toast.success("Subcategory deleted successfully!");
+      await fetchallSubCategory();
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
 
   console.log("all subcategory data in state after fetch", allsubcategory);
 
@@ -94,7 +120,6 @@ const SubCategory = () => {
             <button
               className="text-sm border px-3 py-1 rounded text-green-500 hover:text-green-700"
               onClick={() => {
-                // console.log("edit subcategory", row.original._id);
                 setedit(true);
                 seteditdata(row.original);
               }}
@@ -104,7 +129,7 @@ const SubCategory = () => {
             <button
               className="text-sm border px-3 py-1 rounded text-red-500 hover:text-red-700"
               onClick={() => {
-                console.log("delete subcategory", row.original._id);
+                DeleteSubcategory(row.original?._id);
               }}
             >
               Delete
@@ -122,7 +147,7 @@ const SubCategory = () => {
           onClick={() => setopenaddsubcategory(true)}
           className="text-sm border px-3 py-1 rounded"
         >
-          Add SubCategory
+          Add Sub Category
         </button>
       </div>
 
@@ -150,10 +175,20 @@ const SubCategory = () => {
         </div>
       )}
 
-      {/*  render display table compoent */}
+      {/*  render display table compoent if data is available if not show no data image */}
 
       <div>
-        <DisplayTable data={allsubcategory} columns={columns} />
+        {allsubcategory.length === 0 ? (
+          <div className="flex items-center justify-center h-full lg:h-[400px] w-full">
+            <img
+              src={nodata}
+              alt="nodata"
+              className="lg:w-[25rem] lg:h-[25rem] w-[15rem] h-[15rem]"
+            />
+          </div>
+        ) : (
+          <DisplayTable data={allsubcategory} columns={columns} />
+        )}
       </div>
 
       {/*  modal to add new subcategory */}
