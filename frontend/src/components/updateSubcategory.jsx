@@ -6,20 +6,20 @@ import { useSelector } from "react-redux";
 import { RxCross1 } from "react-icons/rx";
 
 // eslint-disable-next-line react/prop-types
-const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
+const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
   const allcategory = useSelector((state) => state.product.allcategory);
 
   const [subcategoryData, setsubcategoryData] = useState({
-    name: "",
-    image: "",
-    category: [],
+    name: data?.name,
+    image: data?.image,
+    category: data?.category || [],
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log(" category image file", file);
+    console.log("sub category image file", file);
     if (file) {
       setsubcategoryData((prev) => ({ ...prev, image: file }));
     }
@@ -39,7 +39,7 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
 
       const response = await Axios({
         method: "POST",
-        url: "api/subcategory/addsubcategory",
+        url: "api/subcategory/editsubcategory",
         data: formData,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -47,15 +47,13 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
         },
       });
 
-      console.log("response of sub category create", response.data);
+      console.log("response of edit sub category create", response.data);
 
       if (!response.data.success === true) {
-        throw new Error("Failed to create sub category");
+        throw new Error("Failed to edit sub category");
       }
-      toast.success(
-        `Sub Category ${subcategoryData.name} created successfully`
-      );
-      fetchallSubCategory();
+      toast.success(`Sub Category ${subcategoryData.name} edited successfully`);
+      await fetchallSubCategory();
       close();
     } catch (error) {
       console.error("Error creating category:", error);
@@ -81,12 +79,11 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
     });
   };
 
-  console.log("subcategoryData", subcategoryData);
   return (
     <section className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-center justify-center">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Add New Sub Category</h3>
+          <h3 className="text-lg font-semibold">Update Sub Category</h3>
           <button
             onClick={() => close()}
             className="p-1 hover:bg-gray-100 rounded-full"
@@ -171,7 +168,7 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
               }}
             >
               <option value="" disabled>
-                Select a category
+                Update new category
               </option>
               {allcategory?.map((cat, index) => {
                 return (
@@ -200,7 +197,7 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
               }
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
             >
-              {isLoading ? "Saving..." : "Save"}
+              {isLoading ? "Updating..." : "Update"}
             </button>
           </div>
         </form>
@@ -209,4 +206,4 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
   );
 };
 
-export default UploadSubcategorymodel;
+export default UpdateSubcategory;

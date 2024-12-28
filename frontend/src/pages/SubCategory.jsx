@@ -6,6 +6,7 @@ import { setallsubcategory } from "../store/ProductSlice";
 import DisplayTable from "../components/DisplayTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import ViewFullimage from "../components/ViewFullimage";
+import UpdateSubcategory from "../components/updateSubcategory";
 
 const SubCategory = () => {
   const [openaddsubcategory, setopenaddsubcategory] = useState(false);
@@ -14,6 +15,10 @@ const SubCategory = () => {
 
   const [loading, setloading] = useState(false);
   const [getimageurl, setgetimageurl] = useState("");
+  const [edit, setedit] = useState(false);
+  const [editdata, seteditdata] = useState({
+    _id: "",
+  });
 
   const dispatch = useDispatch();
   const allsubcategory = useSelector((state) => state.product.allsubcategory);
@@ -89,7 +94,9 @@ const SubCategory = () => {
             <button
               className="text-sm border px-3 py-1 rounded text-green-500 hover:text-green-700"
               onClick={() => {
-                console.log("edit subcategory", row.original._id);
+                // console.log("edit subcategory", row.original._id);
+                setedit(true);
+                seteditdata(row.original);
               }}
             >
               Edit
@@ -160,6 +167,15 @@ const SubCategory = () => {
       {/*  show full image of subcategory */}
       {getimageurl && (
         <ViewFullimage url={getimageurl} close={() => setgetimageurl("")} />
+      )}
+
+      {/* edit subcategory  */}
+      {edit && (
+        <UpdateSubcategory
+          data={editdata}
+          close={() => setedit(false)}
+          fetchallSubCategory={fetchallSubCategory}
+        />
       )}
     </section>
   );
