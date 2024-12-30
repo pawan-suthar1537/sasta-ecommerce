@@ -1,5 +1,404 @@
+import { useState } from "react";
+import {
+  MdOutlineDriveFolderUpload,
+  MdRemoveCircleOutline,
+} from "react-icons/md";
+import { useSelector } from "react-redux";
+import { IoIosClose } from "react-icons/io";
+import AddmoreDetailsDialog from "../components/AddmoreDetailsDialog";
+
 const AddProduct = () => {
-  return <div>AddProduct</div>;
+  const [data, setdata] = useState({
+    name: "",
+    image: [],
+    category: [],
+    subcategory: [],
+    unit: "",
+    stock: "",
+    price: "",
+    discount: "",
+    description: "",
+    more_details: {},
+    // published: true,
+  });
+  const [selected_category, setselected_category] = useState("");
+  const [selected_Subcategory, setselected_Subcategory] = useState("");
+
+  const [openmoredetail, setopenmoredetail] = useState(false);
+  const [fieldname, setfieldname] = useState("");
+  const [loading, setloading] = useState(false);
+
+  const allcategory = useSelector((state) => state.product.allcategory);
+  const allsubcategory = useSelector((state) => state.product.allsubcategory);
+
+  const handlechange = (e) => {
+    const { name, value, type, files } = e.target;
+
+    if (type === "file") {
+      setdata((prev) => ({
+        ...prev,
+        [name]: Array.from(files), // Convert FileList to an array
+      }));
+    } else {
+      setdata((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const removeImage = (index) => {
+    setdata((prev) => ({
+      ...prev,
+      image: prev.image.filter((_, i) => i !== index),
+    }));
+  };
+
+  const generateImagePreviews = () => {
+    return data.image.map((file) => {
+      return URL.createObjectURL(file);
+    });
+  };
+
+  const handleaddmoredetails = (e) => {
+    setdata((prev) => ({
+      ...prev,
+      more_details: {
+        ...prev.more_details,
+        [fieldname]: e.target.value,
+      },
+    }));
+    setfieldname("");
+    setopenmoredetail(false);
+  };
+
+  const handleaddproduct = (e) => {
+    e.preventDefault();
+    console.log("data", data);
+  };
+
+  return (
+    <section>
+      <div className="p-2  text-2xl flex items-center justify-between">
+        <h2 className="font-semibold">Add Product</h2>
+      </div>
+      {/* form */}
+      <div className="grid  p-3">
+        <form className="grid gap-2" onSubmit={handleaddproduct}>
+          <div className="grid gap-1">
+            <label htmlFor="name">Name</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="name"
+              value={data.name}
+              onChange={handlechange}
+              required
+              className="border p-2 rounded outline-none"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="unit">Unit</label>
+            <input
+              type="text"
+              name="unit"
+              id="unit"
+              placeholder="unit"
+              value={data.unit}
+              onChange={handlechange}
+              required
+              className="border p-2 rounded outline-none"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="description">Description</label>
+            <textarea
+              type="text"
+              name="description"
+              id="description"
+              placeholder="description"
+              value={data.description}
+              onChange={handlechange}
+              required
+              multiple
+              rows={3}
+              className="border p-2 rounded outline-none resize-none"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="stock">Stock</label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              placeholder="stock"
+              value={data.stock}
+              onChange={handlechange}
+              required
+              className="border p-2 rounded outline-none"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="price">Price</label>
+            <input
+              type="number"
+              name="price"
+              id="price"
+              placeholder="price"
+              value={data.price}
+              onChange={handlechange}
+              required
+              className="border p-2 rounded outline-none"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="discount">Discount</label>
+            <input
+              type="number"
+              name="discount"
+              id="discount"
+              placeholder="discount"
+              value={data.discount}
+              onChange={handlechange}
+              required
+              className="border p-2 rounded outline-none"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="image">Image</label>
+            <div className="flex items-center justify-center border p-2 rounded outline-none">
+              <label
+                htmlFor="image"
+                className="cursor-pointer flex flex-col items-center"
+              >
+                <MdOutlineDriveFolderUpload
+                  size={30}
+                  className="text-gray-500"
+                />
+                <span className="text-sm text-gray-500">Upload Image</span>
+              </label>
+              <input
+                type="file"
+                name="image"
+                id="image"
+                onChange={handlechange}
+                multiple
+                className="hidden"
+              />
+            </div>
+          </div>
+          {data.image.length > 0 && (
+            <div className="mt-2">
+              <ul className="grid grid-cols-5 gap-4">
+                {generateImagePreviews().map((imageUrl, index) => (
+                  <li
+                    key={index}
+                    className="relative flex justify-center items-center"
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={`Preview ${index}`}
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                    {/* Remove Button */}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute bottom-0 right-0 text-red-500 hover:text-red-700"
+                      style={{ transform: "translate(25%, 25%)" }} // Adjust to bottom-right corner
+                    >
+                      <MdRemoveCircleOutline size={20} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div className="grid gap-1">
+            <label htmlFor="category">Category</label>
+            <div className="">
+              <select
+                value={selected_category}
+                className="border w-full p-2 rounded outline-none"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const cat = allcategory.find((item) => item._id === value);
+                  if (cat) {
+                    setdata((prev) => {
+                      const existingCategoryIndex = prev.category.findIndex(
+                        (item) => item._id === cat._id
+                      );
+
+                      if (existingCategoryIndex === -1) {
+                        return {
+                          ...prev,
+                          category: [...prev.category, cat],
+                        };
+                      } else {
+                        return {
+                          ...prev,
+                          category: prev.category.map((item, index) =>
+                            index === existingCategoryIndex ? cat : item
+                          ),
+                        };
+                      }
+                    });
+                  }
+                  setselected_category("");
+                }}
+              >
+                <option value="">Select Category</option>
+                {allcategory.map((item) => (
+                  <option key={item._id} value={item._id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+              <div className="flex flex-wrap gap-3">
+                {data.category.map((item, index) => (
+                  <div
+                    key={item._id + index}
+                    className="text-lg flex items-center gap-1 mt-2 p-1 bg-blue-100 rounded-lg"
+                  >
+                    <span>{item.name}</span>
+                    <div
+                      onClick={() => {
+                        setdata((prev) => ({
+                          ...prev,
+                          category: prev.category.filter((_, i) => i !== index),
+                        }));
+                      }}
+                    >
+                      <IoIosClose size={28} className="cursor-pointer" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-1">
+            <label htmlFor="subcategory">Sub Category</label>
+            <div className="">
+              <select
+                value={selected_Subcategory}
+                className="border w-full p-2 rounded outline-none"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const subcat = allsubcategory.find(
+                    (item) => item._id === value
+                  );
+                  if (subcat) {
+                    setdata((prev) => {
+                      const existingSubcategoryIndex =
+                        prev.subcategory.findIndex(
+                          (item) => item._id === subcat._id
+                        );
+
+                      if (existingSubcategoryIndex === -1) {
+                        return {
+                          ...prev,
+                          subcategory: [...prev.subcategory, subcat],
+                        };
+                      } else {
+                        return {
+                          ...prev,
+                          subcategory: prev.subcategory.map((item, index) =>
+                            index === existingSubcategoryIndex ? subcat : item
+                          ),
+                        };
+                      }
+                    });
+                  }
+                  setselected_Subcategory("");
+                }}
+              >
+                <option value="">Select Subcategory</option>
+                {allsubcategory.map((item) => (
+                  <option key={item._id} value={item._id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+              <div className="flex flex-wrap gap-3">
+                {data.subcategory.map((item, index) => (
+                  <div
+                    key={item._id + index}
+                    className="text-lg flex items-center gap-1 mt-2 p-1 bg-blue-100 rounded-lg"
+                  >
+                    <span>{item.name}</span>
+                    <div
+                      onClick={() => {
+                        setdata((prev) => ({
+                          ...prev,
+                          subcategory: prev.subcategory.filter(
+                            (_, i) => i !== index
+                          ),
+                        }));
+                      }}
+                    >
+                      <IoIosClose size={28} className="cursor-pointer" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/*  show more details */}
+
+          <div>
+            {Object?.keys(data.more_details)?.map((key, index) => {
+              return (
+                <div key={key + index} className="grid gap-1">
+                  <label htmlFor={key}>{key}</label>
+                  <input
+                    type="text"
+                    name={key}
+                    id={key}
+                    value={data.more_details[key]}
+                    onChange={(e) => {
+                      setdata((prev) => ({
+                        ...prev,
+                        more_details: {
+                          ...prev.more_details,
+                          [key]: e.target.value,
+                        },
+                      }));
+                    }}
+                    className="border w-full p-2 rounded outline-none"
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          <div
+            onClick={() => setopenmoredetail(true)}
+            className="inline-block py-1 px-3 bg-primary w-36 cursor-pointer  border-black text-white hover:text-black rounded-md"
+          >
+            More Details?{" "}
+          </div>
+          <button
+            type="submit"
+            className="inline-block py-2 bg-blue-500 text-white hover:text-black rounded-md"
+          >
+            {loading ? "Loading..." : "Add Product"}
+          </button>
+        </form>
+      </div>
+      {openmoredetail && (
+        <AddmoreDetailsDialog
+          close={() => setopenmoredetail(false)}
+          value={fieldname}
+          onChange={(e) => setfieldname(e.target.value)}
+          submit={handleaddmoredetails}
+        />
+      )}
+    </section>
+  );
 };
 
 export default AddProduct;
