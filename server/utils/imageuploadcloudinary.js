@@ -87,3 +87,25 @@ export const uploadSubCategoryImage = async (file, name) => {
   });
   return upload;
 };
+export const uploadProductimagesImage = async (file, name) => {
+  const buffer = file?.buffer || Buffer.from(await file.arrayBuffer());
+
+  const folderPath = `sasta_ecom/product/${name}`;
+
+  const upload = await new Promise((res, rej) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: folderPath,
+        },
+        (err, result) => {
+          if (err) {
+            rej(err);
+          }
+          res(result);
+        }
+      )
+      .end(buffer);
+  });
+  return upload;
+};
