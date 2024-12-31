@@ -4,6 +4,7 @@ import Axios from "../utils/Axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setallproduct } from "../store/ProductSlice";
 import ProductCard from "../components/ProductCard";
+import { IoIosSearch } from "react-icons/io";
 
 const AllProduct = () => {
   const allproduct = useSelector((state) => state.product.allproduct);
@@ -11,6 +12,7 @@ const AllProduct = () => {
   const [page, setpage] = useState(1);
   const [loading, setloading] = useState(false);
   const [totalPages, settotalPages] = useState(1);
+  const [searchText, setsearchText] = useState("");
   const fetchAllProductData = async () => {
     try {
       setloading(true);
@@ -20,6 +22,7 @@ const AllProduct = () => {
         data: {
           page: page,
           limit: 12,
+          search: searchText,
         },
       });
       console.log("res of fetch all product", res.data);
@@ -58,10 +61,37 @@ const AllProduct = () => {
 
   console.log("allproduct from state after fetch from db", allproduct);
 
+  const handlesearch = (e) => {
+    const { value } = e.target;
+    setsearchText(value);
+    setpage(1);
+  };
+
+  useEffect(() => {
+    let flag = true;
+    const interval = setTimeout(() => {
+      if (flag) {
+        fetchAllProductData();
+        flag = false;
+      }
+    }, 500);
+    return () => clearTimeout(interval);
+  }, [searchText]);
+
   return (
     <section>
-      <div className="p-2  text-2xl flex items-center justify-between">
-        <h2 className="font-semibold">Add Product</h2>
+      <div className="p-2 h-full  text-2xl flex items-center justify-between gap-4">
+        <h2 className="font-semibold ">Add Product</h2>
+        <div className="h-full min-w-24 max-w-56 w-full ml-auto bg-blue-50 px-4 flex items-center gap-2 py-2">
+          <IoIosSearch size={26} />
+          <input
+            type="text"
+            placeholder="Search"
+            className=" rounded-md h-full  w-full outline-none bg-transparent  "
+            value={searchText}
+            onChange={handlesearch}
+          />
+        </div>
       </div>
       {/*  
         show loading
