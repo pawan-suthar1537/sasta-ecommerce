@@ -169,3 +169,38 @@ export const GetAllProducts = async (req, res) => {
     });
   }
 };
+
+export const GetAllProductsbyCat = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    console.log(req.body);
+    if (!_id) {
+      return res.status(400).json({
+        success: false,
+        message: "Category id is required",
+      });
+    }
+    const product = await Productmodel.find({
+      category: {
+        $in: _id,
+      },
+    }).limit(20);
+    if (!product) {
+      return res.status(400).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "category fetched successfully",
+      data: product,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};

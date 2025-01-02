@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import ValidUrlConvert from "../utils/URLconverter";
+import { Link, useNavigate } from "react-router-dom";
+import CategoryWiseProductDisplay from "../components/CategoryWiseProductDisplay";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [isBannerLoaded, setIsBannerLoaded] = useState(false);
   const [isSBannerLoaded, setIsSBannerLoaded] = useState(false);
 
@@ -11,9 +15,33 @@ const Home = () => {
     "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-03/babycare-WEB.jpg";
 
   const allcategory = useSelector((state) => state.product.allcategory);
+  const allsubcategory = useSelector((state) => state.product.allsubcategory);
+
+  const handleredirectproductlistpage = (catid, catname) => {
+    console.log("catid", catid);
+    console.log("catname", catname);
+    const subcatdata = allsubcategory.find((sub) => {
+      const filtersubcat = sub.category.some((el) => {
+        return el._id == catid;
+      });
+      return filtersubcat ? true : null;
+    });
+    console.log("subcatdata", subcatdata);
+
+    if (subcatdata) {
+      var url = "";
+      url = `/${ValidUrlConvert(catname)}-${catid}/${ValidUrlConvert(
+        subcatdata.name
+      )}-${subcatdata._id}`;
+    } else {
+      url = `/${ValidUrlConvert(catname)}/${catid}`;
+    }
+    console.log("url", url);
+    navigate(url);
+  };
 
   return (
-    <section className="bg-white">
+    <section className="bg-white max-w-7xl mx-auto">
       <div className="container mx-auto rounded my-4">
         {/* Skeleton Loader */}
         <div
@@ -26,7 +54,11 @@ const Home = () => {
         </div>
 
         {/* Image Content */}
-        <div className={`${isBannerLoaded && isSBannerLoaded ? "" : "hidden"}`}>
+        <div
+          className={`${
+            isBannerLoaded && isSBannerLoaded ? "" : "hidden"
+          } container`}
+        >
           <img
             src={banner}
             alt="banner"
@@ -43,16 +75,22 @@ const Home = () => {
       </div>
 
       {/* Shop by Category */}
-      <div className="container mx-auto my-4 px-4 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-10 gap-2">
+      <div className="container mx-auto my-4 px-4 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-10 gap-4">
         {allcategory
           ? allcategory.map((category, index) => {
               return (
-                <div key={index}>
+                <div
+                  key={index}
+                  onClick={() =>
+                    handleredirectproductlistpage(category._id, category.name)
+                  }
+                  className="cursor-pointer"
+                >
                   <div>
                     <img
                       src={category?.image}
                       alt="category"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded"
                     />
                   </div>
                 </div>
@@ -69,6 +107,13 @@ const Home = () => {
               </div>
             ))}
       </div>
+
+      {/*  display category Product */}
+      {allcategory.map((c, i) => {
+        return (
+          <CategoryWiseProductDisplay key={i} name={c?.name} id={c?._id} />
+        );
+      })}
     </section>
   );
 };
