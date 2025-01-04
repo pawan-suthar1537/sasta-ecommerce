@@ -200,7 +200,6 @@ const AddProduct = () => {
                 placeholder="unit"
                 value={data.unit}
                 onChange={handlechange}
-                required
                 className="border p-2 rounded outline-none"
               />
             </div>

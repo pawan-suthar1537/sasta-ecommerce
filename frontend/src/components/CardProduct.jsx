@@ -1,8 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import ValidUrlConvert from "../utils/URLconverter";
 
 const CardProduct = ({ data }) => {
+  let url = `/product/${ValidUrlConvert(data.name)}-${data._id}`;
   return (
-    <div className="border grid p-4 gap-3 max-w-52 lg:min-w-52 rounded">
+    <Link
+      to={url}
+      className="border grid p-4 gap-3 max-w-52 lg:min-w-52 rounded"
+    >
       <div className="max-h-32  min-h-20 rounded">
         <img src={data?.image[0]} alt={data?.name} className="w-full h-full" />
       </div>
@@ -21,7 +27,7 @@ const CardProduct = ({ data }) => {
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

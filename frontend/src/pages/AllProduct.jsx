@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setallproduct } from "../store/ProductSlice";
 import ProductCard from "../components/ProductCard";
 import { IoIosSearch } from "react-icons/io";
+import nodata from "../assets/nodata.jpg";
 
 const AllProduct = () => {
   const allproduct = useSelector((state) => state.product.allproduct);
@@ -81,17 +82,22 @@ const AllProduct = () => {
   return (
     <section>
       <div className="p-2 h-full  text-2xl flex items-center justify-between gap-4">
-        <h2 className="font-semibold ">Add Product</h2>
-        <div className="h-full min-w-24 max-w-56 w-full ml-auto bg-blue-50 px-4 flex items-center gap-2 py-2">
-          <IoIosSearch size={26} />
-          <input
-            type="text"
-            placeholder="Search"
-            className=" rounded-md h-full  w-full outline-none bg-transparent  "
-            value={searchText}
-            onChange={handlesearch}
-          />
-        </div>
+        <h2 className="font-semibold ">All Product</h2>
+
+        {allproduct.length === 0 ? (
+          <div></div>
+        ) : (
+          <div className="h-full min-w-24 max-w-56 w-full ml-auto bg-blue-50 px-4 flex items-center gap-2 py-2">
+            <IoIosSearch size={26} />
+            <input
+              type="text"
+              placeholder="Search"
+              className=" rounded-md h-full  w-full outline-none bg-transparent  "
+              value={searchText}
+              onChange={handlesearch}
+            />
+          </div>
+        )}
       </div>
       {/*  
         show loading
@@ -118,30 +124,41 @@ const AllProduct = () => {
         </div>
       )}
 
+      {allproduct.length === 0 ? (
+        <div className="flex items-center justify-center h-full lg:h-[400px] w-full">
+          <img
+            src={nodata}
+            alt="nodata"
+            className="lg:w-[25rem] lg:h-[25rem] w-[15rem] h-[15rem]"
+          />
+        </div>
+      ) : (
+        <div className="p-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 ">
+            {allproduct.map((p, i) => {
+              return <ProductCard data={p} key={i} />;
+            })}
+          </div>
+          {/* show pagination */}
+          <div className="flex justify-between my-4">
+            <button
+              onClick={handleprev}
+              className="border border-black px-4 py-1 hover:bg-slate-400"
+            >
+              prev
+            </button>
+            <button className="w-full">{page / totalPages}</button>
+            <button
+              onClick={handlenext}
+              className="border border-black px-4 py-1 hover:bg-slate-400"
+            >
+              next
+            </button>
+          </div>
+        </div>
+      )}
+
       {/*  product card */}
-      <div className="p-4">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 ">
-          {allproduct.map((p, i) => {
-            return <ProductCard data={p} key={i} />;
-          })}
-        </div>
-        {/* show pagination */}
-        <div className="flex justify-between my-4">
-          <button
-            onClick={handleprev}
-            className="border border-black px-4 py-1 hover:bg-slate-400"
-          >
-            prev
-          </button>
-          <button className="w-full">{page / totalPages}</button>
-          <button
-            onClick={handlenext}
-            className="border border-black px-4 py-1 hover:bg-slate-400"
-          >
-            next
-          </button>
-        </div>
-      </div>
     </section>
   );
 };

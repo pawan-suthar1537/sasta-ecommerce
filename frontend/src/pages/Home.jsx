@@ -74,6 +74,7 @@ const Home = () => {
         </div>
       </div>
 
+      <h3 className="container p-4">shop by category</h3>
       {/* Shop by Category */}
       <div className="container mx-auto my-4 px-4 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-10 gap-4">
         {allcategory
@@ -86,12 +87,13 @@ const Home = () => {
                   }
                   className="cursor-pointer"
                 >
-                  <div>
+                  <div className="bg-white rounded p-4 min-h-36 grid gap-2">
                     <img
                       src={category?.image}
                       alt="category"
-                      className="w-full h-full object-cover rounded"
+                      className="w-full h-full object-scale-down rounded"
                     />
+                    <p className="text-lg font-bold">{category.name}</p>
                   </div>
                 </div>
               );

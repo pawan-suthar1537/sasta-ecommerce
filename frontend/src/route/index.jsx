@@ -17,6 +17,7 @@ import AllProduct from "../pages/AllProduct";
 import AddProduct from "../pages/AddProduct";
 import AdminPermisson from "../laout/AdminPermisson";
 import ProductListPage from "../components/ProductListPage";
+import ProductDispalyPage from "../components/ProductDispalyPage";
 
 const router = createBrowserRouter([
   {
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
             element: <ProductListPage />,
           },
         ],
+      },
+      {
+        path: "product/:productid",
+        element: <ProductDispalyPage />,
       },
     ],
   },

@@ -36,12 +36,7 @@ export const AddProduct = async (req, res) => {
         message: "Product price is required",
       });
     }
-    if (!unit) {
-      return res.status(400).json({
-        success: false,
-        message: "Product unit is required",
-      });
-    }
+
     if (!stock) {
       return res.status(400).json({
         success: false,
