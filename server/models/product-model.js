@@ -4,7 +4,7 @@ const ProductSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "please provide a name of product "],
-    maxlength: 20,
+    maxlength: 200,
   },
   image: {
     type: Array,

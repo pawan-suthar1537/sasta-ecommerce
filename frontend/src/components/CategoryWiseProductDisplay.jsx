@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Axios from "../utils/Axios";
@@ -10,6 +10,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
   console.log("_id", id);
   const [data, setdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const containerref = useRef();
 
   const fetchProductbycategory = async () => {
     try {
@@ -44,6 +45,13 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
 
   console.log("data", data);
 
+  const handlescrollRight = () => {
+    containerref.current.scrollLeft += 200;
+  };
+  const handlescrollLeft = () => {
+    containerref.current.scrollLeft -= 200;
+  };
+
   return (
     <div>
       <div>
@@ -54,20 +62,33 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
           </Link>
         </div>
         {/* display category part */}
-        <div className="flex items-center  gap-4 md:gap-6 lg:gap-8 container mx-auto p-2 overflow-hidden">
-          {data.map((p, index) => {
-            return <CardProduct key={index} data={p} />;
-          })}
+        <div className="relative flex items-center ">
+          <div
+            className="flex gap-4 md:gap-6 lg:gap-8 container mx-auto p-2 overflow-x-scroll scrollbar-none scroll-smooth"
+            ref={containerref}
+          >
+            {data.map((p, index) => {
+              return <CardProduct key={index} data={p} />;
+            })}
 
-          {/* buttons */}
-          <div className="w-full left-0 right-0 container mx-auto  px-2 absolute hidden lg:flex justify-between max-w-full">
-            <button className="z-10  left-28 relative bg-white p-1 rounded-full shadow-md text-lg">
-              <FaChevronLeft />
-            </button>
-            <button className="z-10 relative bg-white p-1 rounded-full shadow-md text-lg">
-              <FaAngleRight />
-            </button>
+            {/* buttons */}
           </div>
+          {data.length > 5 && (
+            <div className="w-full left-0 right-0 container mx-auto px-2 absolute flex justify-between items-center max-w-full hidden md:flex">
+              <button
+                onClick={handlescrollLeft}
+                className="z-10 bg-white p-1 rounded-full shadow-md text-lg"
+              >
+                <FaChevronLeft />
+              </button>
+              <button
+                onClick={handlescrollRight}
+                className="z-10 bg-white p-1 rounded-full shadow-md text-lg"
+              >
+                <FaAngleRight />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
