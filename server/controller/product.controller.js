@@ -235,3 +235,33 @@ export const GetProductbyCategoryandSuncategoryId = async (req, res) => {
     });
   }
 };
+
+export const GetProductDetailsbyid = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    if (!_id) {
+      return res.status(400).json({
+        success: false,
+        message: "Product id is required",
+      });
+    }
+    const product = await Productmodel.findById(_id);
+    if (!product) {
+      return res.status(400).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Product fetched successfully",
+      data: product,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
