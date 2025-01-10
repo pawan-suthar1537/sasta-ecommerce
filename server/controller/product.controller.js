@@ -37,18 +37,6 @@ export const AddProduct = async (req, res) => {
       });
     }
 
-    if (!stock) {
-      return res.status(400).json({
-        success: false,
-        message: "Product stock is required",
-      });
-    }
-    if (!discount) {
-      return res.status(400).json({
-        success: false,
-        message: "Product discount is required",
-      });
-    }
     if (!description) {
       return res.status(400).json({
         success: false,
@@ -190,6 +178,54 @@ export const GetAllProductsbyCat = async (req, res) => {
       success: true,
       message: "category fetched successfully",
       data: product,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+export const GetProductbyCategoryandSuncategoryId = async (req, res) => {
+  try {
+    const { categoryId, subcategoryId, page, limit } = req.body;
+    if (!categoryId || !subcategoryId) {
+      return res.status(400).json({
+        success: false,
+        message: "Category id and subcategory id is required",
+      });
+    }
+
+    if (!page) {
+      page = 1;
+    }
+    if (!limit) {
+      limit = 10;
+    }
+
+    const query = {
+      category: {
+        $in: categoryId,
+      },
+      subcategory: {
+        $in: subcategoryId,
+      },
+    };
+    const skip = (page - 1) * limit;
+
+    const [data, count] = await Promise.all([
+      Productmodel.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Productmodel.countDocuments(query),
+    ]);
+    res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      data: data,
+      totalcount: count,
+      page: page,
+      limit: limit,
     });
   } catch (error) {
     console.log(error);

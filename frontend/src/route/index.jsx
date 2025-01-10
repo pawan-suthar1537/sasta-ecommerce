@@ -16,8 +16,8 @@ import SubCategory from "../pages/SubCategory";
 import AllProduct from "../pages/AllProduct";
 import AddProduct from "../pages/AddProduct";
 import AdminPermisson from "../laout/AdminPermisson";
-import ProductListPage from "../components/ProductListPage";
-import ProductDispalyPage from "../components/ProductDispalyPage";
+import ProductListPage from "../pages/ProductListPage";
+import ProductDispalyPage from "../pages/ProductDispalyPage";
 
 const router = createBrowserRouter([
   {
