@@ -265,3 +265,148 @@ export const GetProductDetailsbyid = async (req, res) => {
     });
   }
 };
+
+export const UpdateProductByID = async (req, res) => {
+  try {
+    const {
+      _id,
+      name,
+      price,
+      unit,
+      stock,
+      discount,
+      description,
+      category,
+      subcategory,
+      more_details,
+    } = req.body;
+    console.log("req.body", req.body);
+
+    // Handle images
+    const images = req.files;
+    console.log("images", images);
+
+    // Ensure _id is valid
+    if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product id",
+      });
+    }
+
+    const objectId = new mongoose.Types.ObjectId(_id);
+
+    // Validate required fields
+    if (!name)
+      return res
+        .status(400)
+        .json({ success: false, message: "Product name is required" });
+    if (!price)
+      return res
+        .status(400)
+        .json({ success: false, message: "Product price is required" });
+    if (!description)
+      return res
+        .status(400)
+        .json({ success: false, message: "Product description is required" });
+    if (!category || !category[0])
+      return res
+        .status(400)
+        .json({ success: false, message: "Product category is required" });
+    if (!subcategory || !subcategory[0])
+      return res
+        .status(400)
+        .json({ success: false, message: "Product subcategory is required" });
+
+    // Parse more_details if it's a string
+    const parsedMoreDetails =
+      typeof more_details === "string"
+        ? JSON.parse(more_details)
+        : more_details;
+
+    // Handle category and subcategory data
+    const categoryData = Array.isArray(category)
+      ? category.map((id) => new mongoose.Types.ObjectId(id))
+      : [new mongoose.Types.ObjectId(category)];
+    const subcategoryData = Array.isArray(subcategory)
+      ? subcategory.map((id) => new mongoose.Types.ObjectId(id))
+      : [new mongoose.Types.ObjectId(subcategory)];
+
+    // Handle images
+
+    const uploadedImages = [];
+    if (images) {
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i];
+        const uploadedImage = await uploadProductimagesImage(image, name);
+        uploadedImages.push(uploadedImage.secure_url);
+      }
+    }
+
+    // Update product in database
+    const updatedProduct = await Productmodel.findByIdAndUpdate(
+      objectId,
+      {
+        name,
+        price: parseFloat(price),
+        unit,
+        stock: parseInt(stock),
+        discount: parseFloat(discount),
+        description,
+        category: categoryData,
+        subcategory: subcategoryData,
+        more_details: parsedMoreDetails,
+        image: uploadedImages,
+      },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Product not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+export const DeleteProductById = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    if (!_id) {
+      return res.status(400).json({
+        success: false,
+        message: "Product id is required",
+      });
+    }
+    const product = await Productmodel.findByIdAndDelete(_id);
+    if (!product) {
+      return res.status(400).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+      data: product,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
