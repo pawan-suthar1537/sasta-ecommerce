@@ -1,16 +1,45 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Axios from "../utils/Axios";
 import CardProduct from "./CardProduct";
 import { FaChevronLeft } from "react-icons/fa6";
 import { FaAngleRight } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import ValidUrlConvert from "../utils/URLconverter";
 
 const CategoryWiseProductDisplay = ({ id, name }) => {
   console.log("_id", id);
   const [data, setdata] = useState([]);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const containerref = useRef();
+
+  const allsubcategory = useSelector((state) => state.product.allsubcategory);
+
+  const handleredirectproductlistpage = () => {
+    console.log("catid", id);
+    console.log("catname", name);
+    const subcatdata = allsubcategory.find((sub) => {
+      const filtersubcat = sub.category.some((el) => {
+        return el._id == id;
+      });
+      return filtersubcat ? true : null;
+    });
+    console.log("subcatdata", subcatdata);
+
+    if (subcatdata) {
+      var url = "";
+      url = `/${ValidUrlConvert(name)}-${id}/${ValidUrlConvert(
+        subcatdata.name
+      )}-${subcatdata._id}`;
+    } else {
+      url = `/${ValidUrlConvert(name)}/${id}`;
+    }
+    return url;
+  };
+
+  const redirecurll = handleredirectproductlistpage();
 
   const fetchProductbycategory = async () => {
     try {
@@ -57,7 +86,11 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
       <div>
         <div className="mx-auto container max-w-7xl p-4 flex items-center justify-between gap-4">
           <h3 className="font-semibold text-lg md:text-xl">{name}</h3>
-          <Link to={""} className="text-green-400 hover:text-green-200">
+          <Link
+            // onClick={handleredirectproductlistpage()}
+            to={redirecurll}
+            className="text-green-400 hover:text-green-200"
+          >
             See All
           </Link>
         </div>

@@ -55,6 +55,8 @@ const ProductDisplayPage = () => {
     );
   };
 
+  console.log("product at product display page", product);
+
   return (
     <div>
       <div className=" max-w-sm lg:max-w-7xl  mx-auto py-8">
@@ -105,16 +107,26 @@ const ProductDisplayPage = () => {
               {/* <p className="text-sm text-gray-500 mb-4">
                 In stock: {product.stock}
               </p> */}
+              {product.more_details && <p>More Details:</p>}
+              {product.more_details &&
+                Object.keys(product.more_details).map((key) => (
+                  <p key={key} className="text-gray-600 mb-4">
+                    {key}: {product.more_details[key]}
+                  </p>
+                ))}
             </div>
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-              {product.stock > 0 ? (
+              {product.stock === 0 ? (
+                <button
+                  disabled
+                  className="flex-1 bg-gray-300 text-gray-600 py-3 px-6 rounded-md cursor-not-allowed"
+                >
+                  Out of Stock
+                </button>
+              ) : (
                 <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition duration-300 flex items-center justify-center">
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   Add to Cart
-                </button>
-              ) : (
-                <button className="flex-1 bg-gray-300 text-gray-600 py-3 px-6 rounded-md cursor-not-allowed">
-                  Out of Stock
                 </button>
               )}
             </div>
