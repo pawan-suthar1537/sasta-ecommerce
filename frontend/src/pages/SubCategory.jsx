@@ -33,7 +33,7 @@ const SubCategory = () => {
         url: "/api/subcategory/getallsubcategory",
       });
 
-      console.log("res of fetch all sub category", res.data.data);
+      // console.log("res of fetch all sub category", res.data.data);
 
       dispatch(setallsubcategory(res.data.data));
     } catch (error) {
@@ -60,7 +60,7 @@ const SubCategory = () => {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
         },
       });
-      console.log("res of delete subcategory", res.data);
+      // console.log("res of delete subcategory", res.data);
       if (!res.data.success === true) {
         toast.error(res.data.message);
         return;
@@ -72,7 +72,7 @@ const SubCategory = () => {
     }
   };
 
-  console.log("all subcategory data in state after fetch", allsubcategory);
+  // console.log("all subcategory data in state after fetch", allsubcategory);
 
   const columns = [
     columnheloper.accessor("name", {

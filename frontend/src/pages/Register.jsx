@@ -52,7 +52,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form submitted for login:", formData);
+      // console.log("Form submitted for login:", formData);
 
       try {
         const res = await Axios({
@@ -61,7 +61,7 @@ const Register = () => {
           data: formData,
         });
 
-        console.log("res", res);
+        // console.log("res", res);
         if (res.data.success === true) {
           toast.success(res.data.message);
           navigate("/login");

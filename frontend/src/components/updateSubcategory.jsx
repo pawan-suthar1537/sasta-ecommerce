@@ -20,7 +20,7 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log("sub category update image file", file);
+    // console.log("sub category update image file", file);
     if (file) {
       setsubcategoryData((prev) => ({ ...prev, image: file }));
     }
@@ -49,7 +49,7 @@ const UpdateSubcategory = ({ close, data, fetchallSubCategory }) => {
         },
       });
 
-      console.log("response of edit sub category create", response.data);
+      // console.log("response of edit sub category create", response.data);
 
       if (!response.data.success === true) {
         throw new Error("Failed to edit sub category");

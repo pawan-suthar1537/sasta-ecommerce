@@ -29,7 +29,7 @@ const ProductDisplayPage = () => {
           _id: productid,
         },
       });
-      console.log("res", res.data.data);
+      // console.log("res", res.data.data);
       if (res.data.success) {
         setProduct(res.data.data);
       } else {
@@ -55,7 +55,7 @@ const ProductDisplayPage = () => {
     );
   };
 
-  console.log("product at product display page", product);
+  // console.log("product at product display page", product);
 
   return (
     <div>

@@ -27,7 +27,7 @@ const Dashboard = () => {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
         },
       });
-      console.log("res of logout", res);
+      // console.log("res of logout", res);
       if (res.data.success === true) {
         dispatch(logout());
         localStorage.removeItem("accesstoken");
@@ -38,7 +38,6 @@ const Dashboard = () => {
         toast.error("Failed to log out. Please try again!");
       }
     } catch (error) {
-      console.log(error);
       toast.error("Failed to log out. Please try again!");
     }
   };

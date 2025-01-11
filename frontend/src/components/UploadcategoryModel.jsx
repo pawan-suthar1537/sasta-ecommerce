@@ -14,7 +14,7 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log(" category image file", file);
+    // console.log(" category image file", file);
     if (file) {
       setCategoryData((prev) => ({ ...prev, image: file }));
     }
@@ -30,7 +30,7 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
       formData.append("name", categoryData.name);
       formData.append("image", categoryData.image);
 
-      console.log("form data category", formData);
+      // console.log("form data category", formData);
 
       const response = await Axios({
         method: "POST",
@@ -41,7 +41,7 @@ const UploadcategoryModel = ({ close, handleCategoryAdded }) => {
         },
       });
 
-      console.log("response of category create", response.data);
+      // console.log("response of category create", response.data);
 
       if (!response.data.success === true) {
         throw new Error("Failed to create category");

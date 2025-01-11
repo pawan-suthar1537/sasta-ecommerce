@@ -17,7 +17,7 @@ const ProductCard = ({ data, key, fetchAllProductData }) => {
           _id: id,
         },
       });
-      console.log("res ", res.data);
+      // console.log("res ", res.data);
       if (res.data.success === true) {
         toast.success(res.data.message || "Deleted successfully");
         fetchAllProductData();
@@ -31,7 +31,7 @@ const ProductCard = ({ data, key, fetchAllProductData }) => {
   useEffect(() => {
     setIsLoaded(true);
   }, []);
-  console.log("data", data);
+  // console.log("data", data);
   return (
     <div>
       <div

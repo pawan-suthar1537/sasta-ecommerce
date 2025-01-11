@@ -20,7 +20,7 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log(" category image file", file);
+    // console.log(" category image file", file);
     if (file) {
       setsubcategoryData((prev) => ({ ...prev, image: file }));
     }
@@ -48,7 +48,7 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
         },
       });
 
-      console.log("response of sub category create", response.data);
+      // console.log("response of sub category create", response.data);
 
       if (!response.data.success === true) {
         throw new Error("Failed to create sub category");
@@ -82,7 +82,7 @@ const UploadSubcategorymodel = ({ close, fetchallSubCategory }) => {
     });
   };
 
-  console.log("subcategoryData", subcategoryData);
+  // console.log("subcategoryData", subcategoryData);
   return (
     <section className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-center justify-center">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">

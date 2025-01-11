@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import ValidUrlConvert from "../utils/URLconverter";
 
 const CategoryWiseProductDisplay = ({ id, name }) => {
-  console.log("_id", id);
+  // console.log("_id", id);
   const [data, setdata] = useState([]);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -18,15 +18,13 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
   const allsubcategory = useSelector((state) => state.product.allsubcategory);
 
   const handleredirectproductlistpage = () => {
-    console.log("catid", id);
-    console.log("catname", name);
     const subcatdata = allsubcategory.find((sub) => {
       const filtersubcat = sub.category.some((el) => {
         return el._id == id;
       });
       return filtersubcat ? true : null;
     });
-    console.log("subcatdata", subcatdata);
+    // console.log("subcatdata", subcatdata);
 
     if (subcatdata) {
       var url = "";
@@ -53,7 +51,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
           "Content-Type": "application/json",
         },
       });
-      console.log("res of product by category", res.data);
+      // console.log("res of product by category", res.data);
       if (!res.data.success === true) {
         toast.error(res.data.message || "Failed to fetch product by category");
         return;
@@ -72,7 +70,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     fetchProductbycategory();
   }, []);
 
-  console.log("data", data);
+  // console.log("data", data);
 
   const handlescrollRight = () => {
     containerref.current.scrollLeft += 200;

@@ -52,7 +52,7 @@ const Profile = () => {
         },
       });
 
-      console.log("response of avatar upload", response.data.data.avatar);
+      // console.log("response of avatar upload", response.data.data.avatar);
 
       const updatedUserAvatar = await response?.data?.data?.avatar;
 
@@ -82,7 +82,7 @@ const Profile = () => {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
         },
       });
-      console.log("res of profile update", res.data);
+      // console.log("res of profile update", res.data);
       if (!res.data.success === true) {
         toast.error("Error updating profile");
       }
@@ -93,7 +93,7 @@ const Profile = () => {
 
       toast.success("Profile updated successfully");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Error updating profile");
     } finally {
       setloading(false);

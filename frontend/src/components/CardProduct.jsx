@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ValidUrlConvert from "../utils/URLconverter";
 
 const CardProduct = ({ data }) => {
-  console.log("data at CardProduct ", data);
+  // console.log("data at CardProduct ", data);
   let url = `/product/${ValidUrlConvert(data.name)}-${data._id}`;
   return (
     <div className="border grid  lg:p-4  gap-2 lg:gap-3 max-w-52 lg:min-w-52 rounded">

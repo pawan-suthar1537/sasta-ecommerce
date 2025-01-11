@@ -10,7 +10,7 @@ import { logout } from "../store/UserSlice";
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
-  console.log("user in store", user);
+  // console.log("user in store", user);
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
@@ -22,7 +22,7 @@ const Header = () => {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
         },
       });
-      console.log("res of logout", res);
+      // console.log("res of logout", res);
       if (res.data.success === true) {
         dispatch(logout());
         localStorage.removeItem("accesstoken");
@@ -33,8 +33,8 @@ const Header = () => {
         toast.error("Failed to log out. Please try again!");
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to log out. Please try again!");
+      // console.log(error);
+      toast.error(error.message || "Failed to log out. Please try again!");
     }
   };
   return (

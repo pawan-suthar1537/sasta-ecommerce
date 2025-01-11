@@ -26,7 +26,7 @@ const AllProduct = () => {
           search: searchText,
         },
       });
-      console.log("res of fetch all product", res.data);
+      // console.log("res of fetch all product", res.data);
       if (!res.data.success === true) {
         toast.error(res.data.message || "Failed to fetch All products");
         return;
@@ -60,7 +60,7 @@ const AllProduct = () => {
     }
   };
 
-  console.log("allproduct from state after fetch from db", allproduct);
+  // console.log("allproduct from state after fetch from db", allproduct);
 
   const handlesearch = (e) => {
     const { value } = e.target;

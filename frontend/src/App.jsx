@@ -15,7 +15,7 @@ function App() {
   const dispatch = useDispatch();
   const fetchuser = async () => {
     const userdata = await FetchUsersDetails();
-    console.log("userdata", userdata);
+    // console.log("userdata", userdata);
     if (userdata?.data) {
       dispatch(setUserDetails(userdata.data));
     } else {
@@ -29,7 +29,7 @@ function App() {
         method: "GET",
         url: "/api/category/allcategory",
       });
-      console.log("res of fetch all category", res.data.data);
+      // console.log("res of fetch all category", res.data.data);
       // setCategoryData(res.data.data || []);
       dispatch(setallcategory(res.data.data));
     } catch (error) {

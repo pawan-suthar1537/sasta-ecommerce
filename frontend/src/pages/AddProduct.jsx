@@ -108,10 +108,6 @@ const AddProduct = () => {
         : JSON.stringify(data.more_details)
     );
 
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
-
     try {
       setloading(true);
 
@@ -125,7 +121,7 @@ const AddProduct = () => {
         },
       });
 
-      console.log("Response from add product:", res.data);
+      // console.log("Response from add product:", res.data);
 
       if (!res.data.success) {
         toast.error(res.data.message || "Failed to add product");

@@ -25,7 +25,7 @@ const Category = () => {
         method: "GET",
         url: "/api/category/allcategory",
       });
-      console.log("res of fetch all category", res.data.data);
+      // console.log("res of fetch all category", res.data.data);
       // setCategoryData(res.data.data || []);
       dispatch(setallcategory(res.data.data));
     } catch (error) {
@@ -51,7 +51,7 @@ const Category = () => {
     setopenupdate(true);
   };
   const handleDeleteClick = async (category) => {
-    console.log("selected delete category", category);
+    // console.log("selected delete category", category);
     try {
       const res = await Axios({
         method: "DELETE",
@@ -61,7 +61,7 @@ const Category = () => {
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
         },
       });
-      console.log("response of category delete", res.data);
+      // console.log("response of category delete", res.data);
       if (!res.data.success === true) {
         toast.error("Failed to delete category");
       }

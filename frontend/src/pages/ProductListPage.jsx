@@ -42,7 +42,7 @@ const ProductListPage = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log("res getbycidsid", res.data);
+      // console.log("res getbycidsid", res.data);
       if (!res.data.success === true) {
         toast.error(res.data.message || "Failed to fetch product by category");
         return;
@@ -74,7 +74,7 @@ const ProductListPage = () => {
       return filterdata ? filterdata : null;
     });
     setdisplaysubcategory(sub);
-    console.log("sub", sub);
+    // console.log("sub", sub);
   }, [params, allsubcategoryfromstate]);
 
   return (

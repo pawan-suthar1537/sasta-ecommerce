@@ -25,7 +25,7 @@ const SearchPage = () => {
           page: page,
         },
       });
-      console.log("serchapi", res.data);
+      // console.log("serchapi", res.data);
       if (!res.data.success === true) {
         toast.error(res.data.message || "Failed to fetch products");
         return;
@@ -41,7 +41,7 @@ const SearchPage = () => {
       settotalpage(res.data.totalPages);
       setloading(false);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error(error.response.data.message || "Failed to fetch products");
     }
   };

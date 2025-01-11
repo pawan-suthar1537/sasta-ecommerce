@@ -18,15 +18,12 @@ const Home = () => {
   const allsubcategory = useSelector((state) => state.product.allsubcategory);
 
   const handleredirectproductlistpage = (catid, catname) => {
-    console.log("catid", catid);
-    console.log("catname", catname);
     const subcatdata = allsubcategory.find((sub) => {
       const filtersubcat = sub.category.some((el) => {
         return el._id == catid;
       });
       return filtersubcat ? true : null;
     });
-    console.log("subcatdata", subcatdata);
 
     if (subcatdata) {
       var url = "";
@@ -36,7 +33,7 @@ const Home = () => {
     } else {
       url = `/${ValidUrlConvert(catname)}/${catid}`;
     }
-    console.log("url", url);
+
     navigate(url);
   };
 

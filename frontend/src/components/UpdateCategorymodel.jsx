@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
 const UpdateCategorymodel = ({ close, category, handleCategoryUpdated }) => {
-  console.log("category", category);
+  // console.log("category", category);
   const [updatedCategory, setUpdatedCategory] = useState({
     // eslint-disable-next-line react/prop-types
     name: category?.name || "",
@@ -36,7 +36,7 @@ const UpdateCategorymodel = ({ close, category, handleCategoryUpdated }) => {
         formData.append("image", updatedCategory?.image);
       }
 
-      console.log("form data category for update category", formData);
+      // console.log("form data category for update category", formData);
 
       const response = await Axios({
         method: "PUT",
@@ -47,7 +47,7 @@ const UpdateCategorymodel = ({ close, category, handleCategoryUpdated }) => {
         },
       });
 
-      console.log("response of category update", response.data);
+      // console.log("response of category update", response.data);
 
       if (!response.data.success === true) {
         throw new Error("Failed to update category");
