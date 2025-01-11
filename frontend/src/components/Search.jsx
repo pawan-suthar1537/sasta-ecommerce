@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LuSearch } from "react-icons/lu";
 import { TypeAnimation } from "react-type-animation";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Search = () => {
   const location = useLocation();
   const isserchpage = location.pathname === "/search";
+  const navigate = useNavigate();
+  const [searchInput, setSearchInput] = useState("");
+
+  const HandleonChnge = (e) => {
+    const value = e.target.value;
+    const url = `/search?q=${value}`;
+    navigate(url);
+  };
+
   return (
     <div className="w-full  min-w-[250px] lg:min-w-[400px] h-11 lg:h-12 rounded-md border overflow-hidden flex items-center bg-slate-50 ">
       <button className="flex justify-center items-center p-3 h-full text-neutral-600">
@@ -40,6 +49,7 @@ const Search = () => {
               placeholder="searchinggg"
               autoFocus
               className="bg-transparent w-full h-full outline-none"
+              onChange={HandleonChnge}
             />
           </div>
         )}

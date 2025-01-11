@@ -410,3 +410,42 @@ export const DeleteProductById = async (req, res) => {
     });
   }
 };
+
+export const SerchProduct = async (req, res) => {
+  try {
+    let { search, page, limit } = req.body;
+    if (!page) {
+      page = 1;
+    }
+    if (!limit) {
+      limit = 10;
+    }
+
+    const query = search
+      ? { $text: { $search: search } } // Use $text for full-text search
+      : {};
+
+    const [data, count] = await Promise.all([
+      Productmodel.find(query)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit),
+      Productmodel.countDocuments(query),
+    ]);
+    return res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      data: data,
+      totalcount: count,
+      totalpages: Math.ceil(count / limit),
+      page: page,
+      limit: limit,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};

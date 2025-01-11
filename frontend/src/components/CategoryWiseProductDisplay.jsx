@@ -31,8 +31,8 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     if (subcatdata) {
       var url = "";
       url = `/${ValidUrlConvert(name)}-${id}/${ValidUrlConvert(
-        subcatdata.name
-      )}-${subcatdata._id}`;
+        subcatdata?.name
+      )}-${subcatdata?._id}`;
     } else {
       url = `/${ValidUrlConvert(name)}/${id}`;
     }

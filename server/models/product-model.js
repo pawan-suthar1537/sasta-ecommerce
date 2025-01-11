@@ -56,12 +56,12 @@ ProductSchema.index(
   {
     name: "text",
     description: "text",
-    // category: "text",
-    // subcategory: "text",
   },
   {
-    name: 10,
-    description: 5,
+    weights: {
+      name: 10,
+      description: 5,
+    },
   }
 );
 
