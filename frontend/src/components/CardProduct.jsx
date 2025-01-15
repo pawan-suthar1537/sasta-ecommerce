@@ -1,10 +1,52 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ValidUrlConvert from "../utils/URLconverter";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import Axios from "../utils/Axios";
+import { useGlobalCOntext } from "../provier/GlobalProvider";
 
 const CardProduct = ({ data }) => {
+  const { Fetchcartitems } = useGlobalCOntext();
   // console.log("data at CardProduct ", data);
-  let url = `/product/${ValidUrlConvert(data.name)}-${data._id}`;
+  let url = `/product/${ValidUrlConvert(data?.name)}-${data?._id}`;
+  const [loading, setLoading] = useState(false);
+
+  const HandleAddtoCart = async () => {
+    try {
+      setLoading(true);
+      const res = await Axios({
+        method: "POST",
+        url: "/api/cart/addtocart",
+        data: {
+          productId: data?._id,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        },
+      });
+      console.log("res HandleAddtoCart ", res.data);
+      if (res.data.success === true) {
+        toast.success(res.data.message || "Added to cart successfully");
+        if (Fetchcartitems) {
+          Fetchcartitems();
+        }
+        setLoading(false);
+      } else {
+        toast.error(res.data.message || "Failed to add to cart");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      toast.error(error.response.data.message || "Failed to add to cart");
+    } finally {
+      console.log("finally");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="border grid  lg:p-4  gap-2 lg:gap-3 max-w-52 lg:min-w-52 rounded">
       <Link
@@ -33,8 +75,11 @@ const CardProduct = ({ data }) => {
               stock out
             </button>
           ) : (
-            <button className="bg-green-600 text-white px-4 py-1 rounded">
-              Add
+            <button
+              onClick={HandleAddtoCart}
+              className="bg-green-600 text-white px-4 py-1 rounded"
+            >
+              {loading ? "Adding..." : "Add"}
             </button>
           )}
         </div>

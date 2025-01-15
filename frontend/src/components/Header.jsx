@@ -6,10 +6,14 @@ import { AccountDropdown } from "./Accountdropdown";
 import { toast } from "react-toastify";
 import Axios from "../utils/Axios";
 import { logout } from "../store/UserSlice";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
+  const cart = useSelector((state) => state.cart.cart);
+  const [totalprice, settotalprice] = useState(0);
+  const [totalquantity, settotalquantity] = useState(0);
   // console.log("user in store", user);
   const dispatch = useDispatch();
 
@@ -37,6 +41,20 @@ const Header = () => {
       toast.error(error.message || "Failed to log out. Please try again!");
     }
   };
+
+  useEffect(() => {
+    // Calculate total quantity
+    const totalqty = cart.reduce((total, item) => total + item.quantity, 0);
+    settotalquantity(totalqty);
+
+    // Calculate total price
+    const totalprice = cart.reduce(
+      (prev, curr) => prev + curr.productId.price * curr.quantity,
+      0
+    );
+    settotalprice(totalprice);
+  }, [cart]);
+
   return (
     <header className=" h-28 lg:h-16  sticky top-0 flex  flex-col justify-center gap-1 bg-white z-50">
       <div className="container flex mx-auto items-center justify-between px-4">
@@ -82,7 +100,14 @@ const Header = () => {
               <div className="animate-bounce">
                 <CiShoppingCart size={28} />
               </div>
-              <div>my cart</div>
+              {cart[0] ? (
+                <div className="">
+                  <p>{totalquantity} items</p>
+                  <p>₹:{totalprice}</p>
+                </div>
+              ) : (
+                <div>my cart</div>
+              )}
             </button>
           </div>
         </div>
