@@ -67,3 +67,34 @@ export const GetCartItems = async (req, res) => {
     res.status(500).json({ message: error.message || error, success: false });
   }
 };
+
+export const UpdateQty = async (req, res) => {
+  try {
+    const userid = req.userId;
+    const { cartId, quantity } = req.body;
+    if (!cartId || !quantity) {
+      return res.status(400).json({
+        message: "Please provide cartId and quantity",
+        success: false,
+      });
+    }
+    const updatedCartItem = await Cartmodel.updateOne(
+      { _id: cartId },
+      { $set: { quantity } }
+    );
+    if (!updatedCartItem) {
+      return res.status(400).json({
+        message: "Cart item not found",
+        success: false,
+      });
+    }
+    res.status(200).json({
+      message: "Cart item updated successfully",
+      success: true,
+      data: updatedCartItem,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
