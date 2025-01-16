@@ -79,7 +79,7 @@ export const UpdateQty = async (req, res) => {
       });
     }
     const updatedCartItem = await Cartmodel.updateOne(
-      { _id: cartId },
+      { _id: cartId, userId: userid },
       { $set: { quantity } }
     );
     if (!updatedCartItem) {
@@ -92,6 +92,37 @@ export const UpdateQty = async (req, res) => {
       message: "Cart item updated successfully",
       success: true,
       data: updatedCartItem,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message || error, success: false });
+  }
+};
+
+export const DeleteCart = async (req, res) => {
+  try {
+    const userid = req.userId;
+    const { cartId } = req.body;
+    if (!cartId) {
+      return res.status(400).json({
+        message: "Please provide cartId",
+        success: false,
+      });
+    }
+    const deletedCartItem = await Cartmodel.deleteOne({
+      _id: cartId,
+      userId: userid,
+    });
+    if (!deletedCartItem) {
+      return res.status(400).json({
+        message: "Cart item not found",
+        success: false,
+      });
+    }
+    res.status(200).json({
+      message: "Cart item deleted successfully",
+      success: true,
+      data: deletedCartItem,
     });
   } catch (error) {
     console.log(error);

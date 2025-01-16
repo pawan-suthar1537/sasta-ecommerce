@@ -1,5 +1,6 @@
 import {
   AddtoCart,
+  DeleteCart,
   GetCartItems,
   UpdateQty,
 } from "../controller/cart.controller.js";
@@ -12,5 +13,6 @@ const cartrouter = express.Router();
 cartrouter.post("/addtocart", Auth, AddtoCart);
 cartrouter.get("/getmycart", Auth, GetCartItems);
 cartrouter.put("/updatecart", Auth, UpdateQty);
+cartrouter.delete("/delete", Auth, DeleteCart);
 
 export default cartrouter;

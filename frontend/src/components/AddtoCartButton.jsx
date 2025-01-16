@@ -7,7 +7,7 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import { useGlobalCOntext } from "../provier/GlobalProvider";
 
 const AddtoCartButton = ({ data }) => {
-  const { Fetchcartitems, UpdateCartItemQTY } = useGlobalCOntext();
+  const { Fetchcartitems, UpdateCartItemQTY, DeleteCart } = useGlobalCOntext();
   const [loading, setLoading] = useState(false);
   const [padded, setpadded] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -58,7 +58,11 @@ const AddtoCartButton = ({ data }) => {
 
   const HandleDecrement = async (e) => {
     e.preventDefault();
-    UpdateCartItemQTY(cartitemdetails?._id, quantity - 1);
+    if (quantity === 1) {
+      DeleteCart(cartitemdetails?._id);
+    } else {
+      UpdateCartItemQTY(cartitemdetails?._id, quantity - 1);
+    }
   };
 
   // Checking if the product is added to the cart or not
@@ -85,14 +89,14 @@ const AddtoCartButton = ({ data }) => {
         <>
           <button
             onClick={HandleDecrement}
-            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-300"
+            className="p-2 bg-gray-100 text-black hover:bg-gray-200 rounded-full transition-colors duration-300"
           >
             <FaMinus />
           </button>
           <span className="mx-2">{quantity}</span>
           <button
             onClick={HandleIncrement}
-            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-300"
+            className="p-2 bg-gray-100 text-black hover:bg-gray-200 rounded-full transition-colors duration-300"
           >
             <FaPlus />
           </button>
@@ -100,7 +104,7 @@ const AddtoCartButton = ({ data }) => {
       ) : (
         <button
           onClick={HandleAddtoCart}
-          className="p-2 bg-green-500 text-white rounded-full transition-colors duration-300"
+          className="p-2 bg-blue-600  text-white rounded-full transition-colors duration-300"
           disabled={loading}
         >
           {loading ? "Adding..." : "Add to Cart"}

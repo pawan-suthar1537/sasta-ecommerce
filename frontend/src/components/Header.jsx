@@ -96,7 +96,7 @@ const Header = () => {
               </button>
             )}
 
-            <button className="flex items-center justify-center gap-2 bg-secondary px-2 py-[9px] rounded text-white">
+            <button className="flex items-center justify-center gap-2 bg-secondary px-2 py-[.1rem] rounded text-white">
               <div className="animate-bounce">
                 <CiShoppingCart size={28} />
               </div>

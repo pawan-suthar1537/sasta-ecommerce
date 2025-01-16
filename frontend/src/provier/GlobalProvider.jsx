@@ -56,7 +56,33 @@ const GlobalProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response.data.message || "Failed to update quantity");
+      // toast.error(error.response.data.message || "Failed to update quantity");
+    }
+  };
+
+  const DeleteCart = async (cartId) => {
+    try {
+      const res = await Axios({
+        method: "DELETE",
+        url: "/api/cart/delete",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        },
+        data: {
+          cartId: cartId,
+        },
+      });
+      console.log("res of DeleteCart", res.data);
+      if (res.data.success === true) {
+        toast.success(res.data.message || "Cart deleted successfully");
+        Fetchcartitems();
+      } else {
+        console.log("res.data.data", res.data.data);
+        // dispatch(setallcartitems([]));
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message || "Failed to delete cart");
     }
   };
 
@@ -64,7 +90,9 @@ const GlobalProvider = ({ children }) => {
     Fetchcartitems();
   }, []);
   return (
-    <GlobalContext.Provider value={{ Fetchcartitems, UpdateCartItemQTY }}>
+    <GlobalContext.Provider
+      value={{ Fetchcartitems, UpdateCartItemQTY, DeleteCart }}
+    >
       {children}
     </GlobalContext.Provider>
   );

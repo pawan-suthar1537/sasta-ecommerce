@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Axios from "../utils/Axios";
 import { toast } from "react-toastify";
+import AddtoCartButton from "../components/AddtoCartButton";
 
 const ProductDisplayPage = () => {
   const params = useParams();
@@ -124,10 +125,9 @@ const ProductDisplayPage = () => {
                   Out of Stock
                 </button>
               ) : (
-                <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition duration-300 flex items-center justify-center">
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </button>
+                <div className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md transition duration-300 flex items-center justify-center">
+                  <AddtoCartButton data={product} />
+                </div>
               )}
             </div>
           </div>
