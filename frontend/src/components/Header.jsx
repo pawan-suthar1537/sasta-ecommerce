@@ -8,12 +8,15 @@ import Axios from "../utils/Axios";
 import { logout } from "../store/UserSlice";
 
 import { useGlobalCOntext } from "../provier/GlobalProvider";
+import { useState } from "react";
+import CartModel from "./CartModel";
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
   const cart = useSelector((state) => state.cart.cart);
-  const { totalprice, totalquantity } = useGlobalCOntext();
+  const { totalprice, totalquantity, setopencartmodel, opencartmodel } =
+    useGlobalCOntext();
 
   // console.log("user in store", user);
   const dispatch = useDispatch();
@@ -97,7 +100,10 @@ const Header = () => {
               </button>
             )}
 
-            <button className="flex items-center justify-center gap-2 bg-secondary px-2 py-[.1rem] rounded text-white">
+            <button
+              onClick={() => setopencartmodel(true)}
+              className="flex items-center justify-center gap-2 bg-secondary px-2 py-[.1rem] rounded text-white"
+            >
               <div className="animate-bounce">
                 <CiShoppingCart size={28} />
               </div>
@@ -116,6 +122,8 @@ const Header = () => {
       <div className="container mx-auto px-4 lg:hidden">
         <Search />
       </div>
+      {/* open cart model */}
+      {opencartmodel && <CartModel close={() => setopencartmodel(false)} />}
     </header>
   );
 };

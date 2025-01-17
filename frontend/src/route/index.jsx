@@ -18,6 +18,7 @@ import AddProduct from "../pages/AddProduct";
 import AdminPermisson from "../laout/AdminPermisson";
 import ProductListPage from "../pages/ProductListPage";
 import ProductDispalyPage from "../pages/ProductDispalyPage";
+import Cart from "../pages/Cart";
 
 const router = createBrowserRouter([
   {
@@ -114,6 +115,10 @@ const router = createBrowserRouter([
       {
         path: "product/:productid",
         element: <ProductDispalyPage />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
     ],
   },

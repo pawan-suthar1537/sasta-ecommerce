@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useGlobalCOntext } from "../provier/GlobalProvider";
 
 const CartMobileHOver = () => {
-  const { totalprice, totalquantity } = useGlobalCOntext();
+  const { totalprice, totalquantity, setopencartmodel } = useGlobalCOntext();
   return (
     <div className="bg-green-700 px-4 py-2 rounded text-neutral-100 text-sm flex items-center justify-between lg:hidden">
       <div className="flex items-center gap-2">
@@ -20,9 +20,12 @@ const CartMobileHOver = () => {
         <div className="text-xs">
           <p>₹{totalprice}</p>
         </div>
-        <Link to="/cart" className="text-neutral-100 hover:text-neutral-300">
+        <button
+          onClick={() => setopencartmodel(true)}
+          className="text-neutral-100 hover:text-neutral-300"
+        >
           <FaArrowRight size={16} />
-        </Link>
+        </button>
       </div>
     </div>
   );

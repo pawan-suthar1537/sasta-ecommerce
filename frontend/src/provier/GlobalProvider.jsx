@@ -13,6 +13,7 @@ const GlobalProvider = ({ children }) => {
   const dispatch = useDispatch();
   const [totalprice, settotalprice] = useState(0);
   const [totalquantity, settotalquantity] = useState(0);
+  const [opencartmodel, setopencartmodel] = useState(false);
   const Fetchcartitems = async () => {
     try {
       const res = await Axios({
@@ -112,6 +113,8 @@ const GlobalProvider = ({ children }) => {
         DeleteCart,
         totalprice,
         totalquantity,
+        opencartmodel,
+        setopencartmodel,
       }}
     >
       {children}
