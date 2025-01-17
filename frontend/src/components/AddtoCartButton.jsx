@@ -104,10 +104,10 @@ const AddtoCartButton = ({ data }) => {
       ) : (
         <button
           onClick={HandleAddtoCart}
-          className="p-2 bg-blue-600  text-white rounded-full transition-colors duration-300"
+          className="p-2 bg-blue-600  text-white rounded-sm transition-colors duration-300"
           disabled={loading}
         >
-          {loading ? "Adding..." : "Add to Cart"}
+          {loading ? "Adding..." : "Add"}
         </button>
       )}
     </div>

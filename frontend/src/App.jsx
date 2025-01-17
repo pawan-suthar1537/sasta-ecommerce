@@ -11,7 +11,9 @@ import { setUserDetails } from "./store/UserSlice";
 import Axios from "./utils/Axios";
 import { setallcategory } from "./store/ProductSlice";
 import { AddcartItem } from "./store/CartSlice";
-import GlobalProvider from "./provier/GlobalProvider";
+import GlobalProvider, { useGlobalCOntext } from "./provier/GlobalProvider";
+import { CiShoppingCart } from "react-icons/ci";
+import CartMobileHOver from "./components/CartMobileHOver";
 
 function App() {
   const dispatch = useDispatch();
@@ -67,6 +69,12 @@ function App() {
         pauseOnHover
         theme="light"
       />
+      {/* cart button for mobile hover */}
+      {cart.length > 0 && (
+        <div className=" sticky bottom-4 p-2">
+          <CartMobileHOver />
+        </div>
+      )}
     </GlobalProvider>
   );
 }

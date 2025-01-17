@@ -6,14 +6,15 @@ import { AccountDropdown } from "./Accountdropdown";
 import { toast } from "react-toastify";
 import Axios from "../utils/Axios";
 import { logout } from "../store/UserSlice";
-import { useEffect, useState } from "react";
+
+import { useGlobalCOntext } from "../provier/GlobalProvider";
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
   const cart = useSelector((state) => state.cart.cart);
-  const [totalprice, settotalprice] = useState(0);
-  const [totalquantity, settotalquantity] = useState(0);
+  const { totalprice, totalquantity } = useGlobalCOntext();
+
   // console.log("user in store", user);
   const dispatch = useDispatch();
 
@@ -42,18 +43,18 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    // Calculate total quantity
-    const totalqty = cart.reduce((total, item) => total + item.quantity, 0);
-    settotalquantity(totalqty);
+  // useEffect(() => {
+  //   // Calculate total quantity
+  //   const totalqty = cart.reduce((total, item) => total + item.quantity, 0);
+  //   settotalquantity(totalqty);
 
-    // Calculate total price
-    const totalprice = cart.reduce(
-      (prev, curr) => prev + curr.productId.price * curr.quantity,
-      0
-    );
-    settotalprice(totalprice);
-  }, [cart]);
+  //   // Calculate total price
+  //   const totalprice = cart.reduce(
+  //     (prev, curr) => prev + curr.productId.price * curr.quantity,
+  //     0
+  //   );
+  //   settotalprice(totalprice);
+  // }, [cart]);
 
   return (
     <header className=" h-28 lg:h-16  sticky top-0 flex  flex-col justify-center gap-1 bg-white z-50">
