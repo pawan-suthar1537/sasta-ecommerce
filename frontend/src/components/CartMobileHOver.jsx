@@ -9,22 +9,22 @@ const CartMobileHOver = () => {
   return (
     <div className="bg-green-700 px-4 py-2 rounded text-neutral-100 text-sm flex items-center justify-between lg:hidden">
       <div className="flex items-center gap-2">
-        <div className="p-2 bg-green-600 rounded">
+        <div className="p-2 bg-green-600 rounded flex items-center justify-center">
           <CiShoppingCart size={22} />
         </div>
-        <div className="text-xs">
+        <div className="">
           <p>{totalquantity} items</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <div className="text-xs">
+        <div className="">
           <p>₹{totalprice}</p>
         </div>
         <button
           onClick={() => setopencartmodel(true)}
           className="text-neutral-100 hover:text-neutral-300"
         >
-          <FaArrowRight size={16} />
+          <FaArrowRight size={22} />
         </button>
       </div>
     </div>
