@@ -4,6 +4,8 @@ import { useGlobalCOntext } from "../provier/GlobalProvider";
 import { useLocation } from "react-router-dom";
 import Axios from "../utils/Axios";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setAddress } from "../store/AddressSlice";
 
 const Checkout = () => {
   const location = useLocation();
@@ -25,6 +27,7 @@ const Checkout = () => {
     setopencartmodel,
     handlelogout,
   } = useGlobalCOntext();
+  const disptch = useDispatch();
 
   const [addresses, setAddresses] = useState([]);
   const [editingAddress, setEditingAddress] = useState(null);
@@ -48,6 +51,7 @@ const Checkout = () => {
         if (res.data.success) {
           console.log("Addresses fetched:", res.data.data);
           setAddresses(res?.data?.data);
+          disptch(setAddress(res.data.data));
         }
       } catch (error) {
         console.error("Error fetching addresses:", error);
@@ -68,6 +72,7 @@ const Checkout = () => {
         console.log("addAddress", res.data);
         if (res.data.success) {
           setAddresses([res.data.data]);
+          disptch(setAddress(res.data.data));
           setNewAddress({
             address_line: "",
             city: "",

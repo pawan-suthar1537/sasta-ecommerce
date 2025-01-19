@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage"; // Use sessionStorage for sessi
 import userReducer from "./UserSlice";
 import ProductSlice from "./ProductSlice";
 import CartSlice from "./CartSlice";
+import AddressSlice from "./AddressSlice";
 import { combineReducers } from "redux";
 
 const persistConfig = {
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   product: ProductSlice,
   cart: CartSlice,
+  address: AddressSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
