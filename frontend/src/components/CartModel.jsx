@@ -2,11 +2,15 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useGlobalCOntext } from "../provier/GlobalProvider";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CartModel = ({ close }) => {
   const { UpdateCartItemQTY, DeleteCart, totalprice } = useGlobalCOntext();
   const cart = useSelector((state) => state.cart.cart);
+  const user = useSelector((state) => state.user);
   const modalRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleQuantityChange = (id, quantity) => {
     if (quantity <= 0) {
@@ -27,6 +31,20 @@ const CartModel = ({ close }) => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
+
+  const RedirectCheckout = () => {
+    if (user?._id) {
+      close();
+      navigate("/checkout", {
+        state: {
+          cart,
+        },
+      });
+    } else {
+      navigate("/login");
+      toast.error("Please Login to continue");
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex justify-end">
@@ -94,7 +112,10 @@ const CartModel = ({ close }) => {
             <span>Subtotal</span>
             <span>₹{totalprice}</span>
           </div>
-          <button className="w-full bg-black text-white py-2 mt-2">
+          <button
+            onClick={RedirectCheckout}
+            className="w-full bg-black text-white py-2 mt-2"
+          >
             Checkout
           </button>
         </div>

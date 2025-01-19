@@ -11,6 +11,7 @@ import categoryRouter from "./routes/category.route.js";
 import subcategoryRouter from "./routes/subcategory.route.js";
 import ProductROuter from "./routes/product.route.js";
 import CartROuter from "./routes/cart.route.js";
+import AddressROuter from "./routes/address.route.js";
 
 const app = express();
 
@@ -19,7 +20,7 @@ const PORT = process.env.PORT;
 
 app.use(
   cors({
-    origin: [FRONTEND_URL],
+    origin: [FRONTEND_URL, "http://localhost:4173"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -44,6 +45,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/subcategory", subcategoryRouter);
 app.use("/api/product", ProductROuter);
 app.use("/api/cart", CartROuter);
+app.use("/api/address", AddressROuter);
 
 connectDB()
   .then(() => {

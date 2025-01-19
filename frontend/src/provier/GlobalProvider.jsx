@@ -3,6 +3,7 @@ import Axios from "../utils/Axios";
 import { useDispatch, useSelector } from "react-redux";
 import { AddcartItem } from "../store/CartSlice";
 import { toast } from "react-toastify";
+import { logout } from "../store/UserSlice";
 
 export const GlobalContext = createContext(null);
 
@@ -10,6 +11,7 @@ export const useGlobalCOntext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const cart = useSelector((state) => state.cart.cart);
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [totalprice, settotalprice] = useState(0);
   const [totalquantity, settotalquantity] = useState(0);
@@ -29,7 +31,7 @@ const GlobalProvider = ({ children }) => {
         dispatch(AddcartItem(res.data.data));
       } else {
         console.log("res.data.data", res.data.data);
-        // dispatch(setallcartitems([]));
+        dispatch(AddcartItem([]));
       }
     } catch (error) {
       console.error(error);
@@ -78,11 +80,10 @@ const GlobalProvider = ({ children }) => {
       });
       console.log("res of DeleteCart", res.data);
       if (res.data.success === true) {
-        Fetchcartitems();
+        await Fetchcartitems();
         toast.success(res.data.message || "Cart deleted successfully");
       } else {
         console.log("res.data.data", res.data.data);
-        // dispatch(setallcartitems([]));
       }
     } catch (error) {
       console.error(error);
@@ -90,9 +91,18 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
+  const handlelogout = () => {
+    localStorage.clear();
+
+    dispatch(AddcartItem([]));
+  };
+
   useEffect(() => {
-    Fetchcartitems();
-  }, []);
+    if (user._id) {
+      Fetchcartitems();
+    }
+  }, [user]);
+
   useEffect(() => {
     // Calculate total quantity
     const totalqty = cart.reduce((total, item) => total + item.quantity, 0);
@@ -100,7 +110,7 @@ const GlobalProvider = ({ children }) => {
 
     // Calculate total price
     const totalprice = cart.reduce(
-      (prev, curr) => prev + curr.productId.price * curr.quantity,
+      (prev, curr) => prev + curr?.productId?.price * curr.quantity,
       0
     );
     settotalprice(totalprice);
@@ -115,6 +125,7 @@ const GlobalProvider = ({ children }) => {
         totalquantity,
         opencartmodel,
         setopencartmodel,
+        handlelogout,
       }}
     >
       {children}

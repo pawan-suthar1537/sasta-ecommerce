@@ -10,16 +10,22 @@ import { logout } from "../store/UserSlice";
 import { useGlobalCOntext } from "../provier/GlobalProvider";
 import { useState } from "react";
 import CartModel from "./CartModel";
+import { AddcartItem } from "../store/CartSlice";
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
   const cart = useSelector((state) => state.cart.cart);
-  const { totalprice, totalquantity, setopencartmodel, opencartmodel } =
-    useGlobalCOntext();
+  const {
+    totalprice,
+    totalquantity,
+    setopencartmodel,
+    opencartmodel,
+    Fetchcartitems,
+    handlelogout,
+  } = useGlobalCOntext();
 
   // console.log("user in store", user);
-  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     try {
@@ -32,9 +38,7 @@ const Header = () => {
       });
       // console.log("res of logout", res);
       if (res.data.success === true) {
-        dispatch(logout());
-        localStorage.removeItem("accesstoken");
-        localStorage.removeItem("refreshtoken");
+        handlelogout();
         navigate("/login");
         toast.success("successfully logged out!");
       } else {
@@ -58,6 +62,11 @@ const Header = () => {
   //   );
   //   settotalprice(totalprice);
   // }, [cart]);
+
+  const handleLogin = async () => {
+    navigate("/login");
+    await Fetchcartitems();
+  };
 
   return (
     <header className=" h-28 lg:h-16  sticky top-0 flex  flex-col justify-center gap-1 bg-white z-50">
@@ -92,10 +101,7 @@ const Header = () => {
             {user?._id ? (
               <AccountDropdown user={user} onLogout={handleLogout} />
             ) : (
-              <button
-                onClick={() => navigate("/login")}
-                className="mx-2 px-2 text-lg"
-              >
+              <button onClick={handleLogin} className="mx-2 px-2 text-lg">
                 login
               </button>
             )}

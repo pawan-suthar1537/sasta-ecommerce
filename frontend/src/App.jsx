@@ -1,5 +1,5 @@
 import "./App.css";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
@@ -16,6 +16,8 @@ import { CiShoppingCart } from "react-icons/ci";
 import CartMobileHOver from "./components/CartMobileHOver";
 
 function App() {
+  const location = useLocation();
+
   const dispatch = useDispatch();
   const fetchuser = async () => {
     const userdata = await FetchUsersDetails();
@@ -70,7 +72,7 @@ function App() {
         theme="light"
       />
       {/* cart button for mobile hover */}
-      {cart.length > 0 && (
+      {location.pathname !== "/checkout" && cart.length > 0 && (
         <div className=" sticky bottom-4 p-2">
           <CartMobileHOver />
         </div>

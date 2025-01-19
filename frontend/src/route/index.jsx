@@ -19,6 +19,7 @@ import AdminPermisson from "../laout/AdminPermisson";
 import ProductListPage from "../pages/ProductListPage";
 import ProductDispalyPage from "../pages/ProductDispalyPage";
 import Cart from "../pages/Cart";
+import Checkout from "../pages/Checkout";
 
 const router = createBrowserRouter([
   {
@@ -119,6 +120,10 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <Cart />,
+      },
+      {
+        path: "Checkout",
+        element: <Checkout />,
       },
     ],
   },
